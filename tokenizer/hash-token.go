@@ -4,6 +4,10 @@ type HashToken struct {
 	Type HashTokenType
 }
 
+func (t HashToken) String() string {
+	return ""
+}
+
 // Default is "unrestricted"
 type HashTokenType int
 

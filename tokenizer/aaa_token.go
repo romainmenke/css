@@ -1,3 +1,5 @@
 package tokenizer
 
-type Token interface{}
+type Token interface {
+	String() string
+}
