@@ -1,7 +1,19 @@
 package tokenizer
 
-type StringToken struct{}
+type StringToken struct {
+	Value []byte
+	Quote QuoteKind
+}
 
 func (t StringToken) String() string {
-	return ""
+	if t.Quote == SingleQuote {
+		return `'` + string(t.Value) + `'`
+	}
+
+	return `"` + string(t.Value) + `"`
 }
+
+type QuoteKind int
+
+const SingleQuote QuoteKind = 0
+const DoubleQuote QuoteKind = 1

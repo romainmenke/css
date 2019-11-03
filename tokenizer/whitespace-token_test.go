@@ -21,11 +21,11 @@ func TestWhitespaceToken_OnlySelf(t *testing.T) {
 	for _, source := range sources {
 		t.Run(strconv.Quote(source), func(t *testing.T) {
 			tokenizer := New(bytes.NewBufferString(source))
-			sawWhiteSpaceToken := false
+			sawToken := false
 
 			for {
 				token, err := tokenizer.Next()
-				if err == io.EOF && sawWhiteSpaceToken {
+				if err == io.EOF && sawToken {
 					break
 				}
 				if err != nil {
@@ -35,7 +35,7 @@ func TestWhitespaceToken_OnlySelf(t *testing.T) {
 				if _, ok := token.(WhitespaceToken); !ok {
 					t.Fatal(fmt.Sprintf("unexpected token of type : %T", token))
 				} else {
-					sawWhiteSpaceToken = true
+					sawToken = true
 				}
 			}
 		})
