@@ -18,11 +18,14 @@ func New(r io.Reader) *Tokenizer {
 	}
 }
 
-func (t *Tokenizer) Next() (Token, error) {
+func (t *Tokenizer) Next() Token {
 	for {
 		b, err := t.b.ReadByte()
+		if err == io.EOF {
+			return EOFToken{}
+		}
 		if err != nil {
-			return nil, err
+			return ErrorToken{error: err}
 		}
 
 		switch b {
@@ -37,7 +40,7 @@ func (t *Tokenizer) Next() (Token, error) {
 			for {
 				b2, err := t.b.ReadByte()
 				if err != nil {
-					return nil, err
+					return ErrorToken{error: err}
 				}
 
 				switch b2 {
@@ -45,10 +48,10 @@ func (t *Tokenizer) Next() (Token, error) {
 					return StringToken{
 						Value: t.tracking,
 						Quote: quoteKind,
-					}, nil
+					}
 
 				case '\n', '\r', '\f':
-					return nil, errors.New("unexpected newline")
+					return ErrorToken{error: errors.New("unexpected newline")}
 
 				case '\\':
 
@@ -57,10 +60,10 @@ func (t *Tokenizer) Next() (Token, error) {
 						return StringToken{
 							Value: t.tracking,
 							Quote: quoteKind,
-						}, nil
+						}
 					}
 					if err != nil {
-						return nil, err
+						return ErrorToken{error: err}
 					}
 
 					t.tracking = append(t.tracking, b2)
@@ -81,15 +84,15 @@ func (t *Tokenizer) Next() (Token, error) {
 
 		// Whitespace
 		case '\n', '\f', ' ', '\t':
-			return WhitespaceToken{}, nil
+			return WhitespaceToken{}
 
 		case '\r':
 			peeked, err := t.b.Peek(1)
 			if err == io.EOF {
-				return WhitespaceToken{}, nil
+				return WhitespaceToken{}
 			}
 			if err != nil {
-				return nil, err
+				return ErrorToken{error: err}
 			}
 
 			if peeked[0] == '\n' {
@@ -99,7 +102,7 @@ func (t *Tokenizer) Next() (Token, error) {
 				}
 			}
 
-			return WhitespaceToken{}, nil
+			return WhitespaceToken{}
 
 		default:
 			continue

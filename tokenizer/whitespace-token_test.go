@@ -3,7 +3,6 @@ package tokenizer
 import (
 	"bytes"
 	"fmt"
-	"io"
 	"strconv"
 	"testing"
 )
@@ -24,12 +23,13 @@ func TestWhitespaceToken_OnlySelf(t *testing.T) {
 			sawToken := false
 
 			for {
-				token, err := tokenizer.Next()
-				if err == io.EOF && sawToken {
+				token := tokenizer.Next()
+				if _, ok := token.(EOFToken); ok && sawToken {
 					break
 				}
-				if err != nil {
-					t.Fatal(err)
+
+				if errToken, ok := token.(ErrorToken); ok {
+					t.Fatal(errToken)
 				}
 
 				if _, ok := token.(WhitespaceToken); !ok {

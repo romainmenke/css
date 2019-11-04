@@ -3,7 +3,6 @@ package tokenizer
 import (
 	"bytes"
 	"fmt"
-	"io"
 	"testing"
 )
 
@@ -23,12 +22,13 @@ func TestStringToken_OnlySelf(t *testing.T) {
 			sawToken := false
 
 			for {
-				token, err := tokenizer.Next()
-				if err == io.EOF && sawToken {
+				token := tokenizer.Next()
+				if _, ok := token.(EOFToken); ok && sawToken {
 					break
 				}
-				if err != nil {
-					t.Fatal(err)
+
+				if errToken, ok := token.(ErrorToken); ok {
+					t.Fatal(errToken)
 				}
 
 				if sToken, ok := token.(StringToken); !ok {
@@ -56,19 +56,18 @@ func TestStringToken_OnlySelf_NoNewLine(t *testing.T) {
 			tokenizer := New(bytes.NewBufferString(source))
 
 			for {
-				token, err := tokenizer.Next()
-				if err == nil {
-					if token != nil {
-						t.Log(fmt.Sprintf("unexpected token of type : %T", token))
+				token := tokenizer.Next()
+				if errToken, ok := token.(ErrorToken); ok {
+					if errToken.Error() == "unexpected newline" {
+						break
 					}
-					t.Fatal("expected 'unexpected newline' error")
 				}
 
-				if err.Error() == "unexpected newline" {
-					break
+				if token != nil {
+					t.Log(fmt.Sprintf("unexpected token of type : %T", token))
 				}
 
-				t.Fatal(err)
+				t.Fatal("expected 'unexpected newline' error")
 			}
 		})
 	}
