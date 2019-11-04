@@ -1,7 +1,7 @@
 package tokenizer
 
-type CDCToken struct{}
+type TokenCDC struct{}
 
-func (t CDCToken) String() string {
+func (t TokenCDC) String() string {
 	return "-->"
 }

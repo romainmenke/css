@@ -1,7 +1,7 @@
 package tokenizer
 
-type DelimToken struct{}
+type TokenDelim struct{}
 
-func (t DelimToken) String() string {
+func (t TokenDelim) String() string {
 	return ""
 }

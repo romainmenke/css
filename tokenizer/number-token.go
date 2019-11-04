@@ -1,10 +1,10 @@
 package tokenizer
 
-type NumberToken struct {
+type TokenNumber struct {
 	Value float64
 	Type  NumberType
 }
 
-func (t NumberToken) String() string {
+func (t TokenNumber) String() string {
 	return ""
 }

@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestStringToken_OnlySelf(t *testing.T) {
+func TestTokenString_OnlySelf(t *testing.T) {
 	sources := []string{
 		`'foo'`,
 		`'fo\o'`,
@@ -23,15 +23,15 @@ func TestStringToken_OnlySelf(t *testing.T) {
 
 			for {
 				token := tokenizer.Next()
-				if _, ok := token.(EOFToken); ok && sawToken {
+				if _, ok := token.(TokenEOF); ok && sawToken {
 					break
 				}
 
-				if errToken, ok := token.(ErrorToken); ok {
+				if errToken, ok := token.(TokenError); ok {
 					t.Fatal(errToken)
 				}
 
-				if sToken, ok := token.(StringToken); !ok {
+				if sToken, ok := token.(TokenString); !ok {
 					t.Fatal(fmt.Sprintf("unexpected token of type : %T", token))
 				} else if sToken.String() != source {
 					t.Fatal(fmt.Sprintf("unexpected token string : %s", sToken.String()))
@@ -43,7 +43,7 @@ func TestStringToken_OnlySelf(t *testing.T) {
 	}
 }
 
-func TestStringToken_OnlySelf_NoNewLine(t *testing.T) {
+func TestTokenString_OnlySelf_NoNewLine(t *testing.T) {
 	sources := []string{
 		`'fo` + string('\r') + `o'`,
 		`'fo` + string('\n') + `o'`,
@@ -57,7 +57,7 @@ func TestStringToken_OnlySelf_NoNewLine(t *testing.T) {
 
 			for {
 				token := tokenizer.Next()
-				if errToken, ok := token.(ErrorToken); ok {
+				if errToken, ok := token.(TokenError); ok {
 					if errToken.Error() == "unexpected newline" {
 						break
 					}

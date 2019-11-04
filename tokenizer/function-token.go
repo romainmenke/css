@@ -1,7 +1,7 @@
 package tokenizer
 
-type FunctionToken struct{}
+type TokenFunction struct{}
 
-func (t FunctionToken) String() string {
+func (t TokenFunction) String() string {
 	return ""
 }

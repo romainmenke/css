@@ -1,7 +1,7 @@
 package tokenizer
 
-type SemicolonToken struct{}
+type TokenSemicolon struct{}
 
-func (t SemicolonToken) String() string {
+func (t TokenSemicolon) String() string {
 	return ";"
 }

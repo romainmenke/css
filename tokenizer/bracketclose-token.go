@@ -1,7 +1,7 @@
 package tokenizer
 
-type BracketCloseToken struct{}
+type TokenBracketClose struct{}
 
-func (t BracketCloseToken) String() string {
+func (t TokenBracketClose) String() string {
 	return ")"
 }

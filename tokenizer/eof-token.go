@@ -1,7 +1,7 @@
 package tokenizer
 
-type EOFToken struct{}
+type TokenEOF struct{}
 
-func (t EOFToken) String() string {
+func (t TokenEOF) String() string {
 	return "EOF"
 }

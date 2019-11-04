@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestWhitespaceToken_OnlySelf(t *testing.T) {
+func TestTokenWhitespace_OnlySelf(t *testing.T) {
 	sources := []string{
 		string('\n'),
 		string('\n') + string('\r'),
@@ -24,15 +24,15 @@ func TestWhitespaceToken_OnlySelf(t *testing.T) {
 
 			for {
 				token := tokenizer.Next()
-				if _, ok := token.(EOFToken); ok && sawToken {
+				if _, ok := token.(TokenEOF); ok && sawToken {
 					break
 				}
 
-				if errToken, ok := token.(ErrorToken); ok {
+				if errToken, ok := token.(TokenError); ok {
 					t.Fatal(errToken)
 				}
 
-				if _, ok := token.(WhitespaceToken); !ok {
+				if _, ok := token.(TokenWhitespace); !ok {
 					t.Fatal(fmt.Sprintf("unexpected token of type : %T", token))
 				} else {
 					sawToken = true

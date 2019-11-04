@@ -2,10 +2,10 @@ package tokenizer
 
 import "fmt"
 
-type PercentageToken struct {
+type TokenPercentage struct {
 	Value float64
 }
 
-func (t PercentageToken) String() string {
+func (t TokenPercentage) String() string {
 	return fmt.Sprintf("%f", t.Value) + "%"
 }

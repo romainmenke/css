@@ -1,7 +1,7 @@
 package tokenizer
 
-type IdentToken struct{}
+type TokenIdent struct{}
 
-func (t IdentToken) String() string {
+func (t TokenIdent) String() string {
 	return ""
 }

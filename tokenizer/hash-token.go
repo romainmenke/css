@@ -1,10 +1,10 @@
 package tokenizer
 
-type HashToken struct {
+type TokenHash struct {
 	Type HashTokenType
 }
 
-func (t HashToken) String() string {
+func (t TokenHash) String() string {
 	return ""
 }
 

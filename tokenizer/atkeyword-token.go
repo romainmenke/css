@@ -1,7 +1,7 @@
 package tokenizer
 
-type AtKeywordToken struct{}
+type TokenAtKeyword struct{}
 
-func (t AtKeywordToken) String() string {
+func (t TokenAtKeyword) String() string {
 	return ""
 }

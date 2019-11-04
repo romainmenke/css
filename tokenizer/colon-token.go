@@ -1,7 +1,7 @@
 package tokenizer
 
-type ColonToken struct{}
+type TokenColon struct{}
 
-func (t ColonToken) String() string {
+func (t TokenColon) String() string {
 	return ":"
 }

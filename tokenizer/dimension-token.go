@@ -1,10 +1,10 @@
 package tokenizer
 
-type DimensionToken struct {
+type TokenDimension struct {
 	Value float64
 	Type  NumberType
 }
 
-func (t DimensionToken) String() string {
+func (t TokenDimension) String() string {
 	return ""
 }

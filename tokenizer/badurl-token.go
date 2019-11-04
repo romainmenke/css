@@ -1,7 +1,7 @@
 package tokenizer
 
-type BadUrlToken struct{}
+type TokenBadUrl struct{}
 
-func (t BadUrlToken) String() string {
+func (t TokenBadUrl) String() string {
 	return ""
 }

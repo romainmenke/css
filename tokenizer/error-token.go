@@ -1,17 +1,17 @@
 package tokenizer
 
-type ErrorToken struct {
+type TokenError struct {
 	error error
 }
 
-func (t ErrorToken) String() string {
+func (t TokenError) String() string {
 	return t.error.Error()
 }
 
-func (t ErrorToken) Error() string {
+func (t TokenError) Error() string {
 	return t.error.Error()
 }
 
-func (t ErrorToken) Err() error {
+func (t TokenError) Err() error {
 	return t.error
 }

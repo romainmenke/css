@@ -2,19 +2,19 @@ package tokenizer
 
 import "io"
 
-type WhitespaceToken struct{}
+type TokenWhitespace struct{}
 
-func (t WhitespaceToken) String() string {
+func (t TokenWhitespace) String() string {
 	return ""
 }
 
 func TokenizeWhitespace(t *Tokenizer) Token {
 	peeked, err := t.b.Peek(1)
 	if err == io.EOF {
-		return WhitespaceToken{}
+		return TokenWhitespace{}
 	}
 	if err != nil {
-		return ErrorToken{error: err}
+		return TokenError{error: err}
 	}
 
 	if peeked[0] == '\n' {
@@ -24,5 +24,5 @@ func TokenizeWhitespace(t *Tokenizer) Token {
 		}
 	}
 
-	return WhitespaceToken{}
+	return TokenWhitespace{}
 }

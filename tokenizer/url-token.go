@@ -1,7 +1,7 @@
 package tokenizer
 
-type UrlToken struct{}
+type TokenUrl struct{}
 
-func (t UrlToken) String() string {
+func (t TokenUrl) String() string {
 	return ""
 }

@@ -1,7 +1,7 @@
 package tokenizer
 
-type CurlyBracketOpenToken struct{}
+type TokenCurlyBracketOpen struct{}
 
-func (t CurlyBracketOpenToken) String() string {
+func (t TokenCurlyBracketOpen) String() string {
 	return "{"
 }

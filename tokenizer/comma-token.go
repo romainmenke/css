@@ -1,7 +1,7 @@
 package tokenizer
 
-type CommaToken struct{}
+type TokenComma struct{}
 
-func (t CommaToken) String() string {
+func (t TokenComma) String() string {
 	return ","
 }

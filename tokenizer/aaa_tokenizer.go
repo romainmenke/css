@@ -21,10 +21,10 @@ func (t *Tokenizer) Next() Token {
 	for {
 		b, err := t.b.ReadByte()
 		if err == io.EOF {
-			return EOFToken{}
+			return TokenEOF{}
 		}
 		if err != nil {
-			return ErrorToken{error: err}
+			return TokenError{error: err}
 		}
 
 		switch b {
@@ -35,7 +35,7 @@ func (t *Tokenizer) Next() Token {
 
 		// Whitespace
 		case '\n', '\f', ' ', '\t':
-			return WhitespaceToken{}
+			return TokenWhitespace{}
 
 		case '\r':
 			return TokenizeWhitespace(t)

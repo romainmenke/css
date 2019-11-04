@@ -1,7 +1,7 @@
 package tokenizer
 
-type CDOToken struct{}
+type TokenCDO struct{}
 
-func (t CDOToken) String() string {
+func (t TokenCDO) String() string {
 	return "<!--"
 }
