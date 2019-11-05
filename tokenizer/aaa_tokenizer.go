@@ -65,10 +65,7 @@ func (t *Tokenizer) Next() Token {
 			return TokenizeString(t, r)
 
 		// TODO : collapse continous whitespace into 1 token
-		case '\n', '\f', ' ', '\t': // Whitespace
-			return TokenWhitespace{}
-
-		case '\r': // Whitespace
+		case '\u000a', '\u0009', '\u0020': // Whitespace
 			return TokenizeWhitespace(t)
 
 		default:

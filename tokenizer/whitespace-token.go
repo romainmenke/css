@@ -19,7 +19,7 @@ func TokenizeWhitespace(t *Tokenizer) Token {
 		return TokenError{error: err}
 	}
 
-	if peeked != '\n' {
+	if peeked != '\u000a' {
 		err := t.b.UnreadRune()
 		if err != nil {
 			return TokenError{error: err}
