@@ -28,10 +28,9 @@ func (t *Tokenizer) Next() Token {
 			return TokenError{error: err}
 		}
 
-		// substitutions
+		// SUBSTITUTIONS
 		switch r {
-		//Replace any U+000D CARRIAGE RETURN (CR) code points or pairs of U+000D CARRIAGE RETURN (CR) followed by U+000A LINE FEED (LF), by a single U+000A LINE FEED (LF) code point.
-		case '\u000d':
+		case '\u000d': //Replace any U+000D CARRIAGE RETURN (CR) code points or pairs of U+000D CARRIAGE RETURN (CR) followed by U+000A LINE FEED (LF), by a single U+000A LINE FEED (LF) code point.
 			r = '\u000a'
 
 			peeked, _, err := t.b.ReadRune()
@@ -48,30 +47,38 @@ func (t *Tokenizer) Next() Token {
 				}
 			}
 
-			//Replace any U+000C FORM FEED (FF) code points by a single U+000A LINE FEED (LF) code point.
-		case '\u000c':
+		case '\u000c': //Replace any U+000C FORM FEED (FF) code points by a single U+000A LINE FEED (LF) code point.
 			r = '\u000a'
-			// Replace any U+0000 NULL or surrogate code points with U+FFFD REPLACEMENT CHARACTER (�).
-		case '\u0000':
+
+		case '\u0000': // Replace any U+0000 NULL or surrogate code points with U+FFFD REPLACEMENT CHARACTER (�).
 			r = '\ufffd'
 		default:
-			// Replace any U+0000 NULL or surrogate code points with U+FFFD REPLACEMENT CHARACTER (�).
-			if unicode.In(r, unicode.Cs) {
+			if unicode.In(r, unicode.Cs) { // Replace any U+0000 NULL or surrogate code points with U+FFFD REPLACEMENT CHARACTER (�).
 				r = '\ufffd'
 			}
 		}
 
+		// ESCAPE
+		if r == '\\' {
+			unescapedR, err := Unescape(t.b, r)
+			if err != nil {
+				return TokenError{error: err}
+			}
+
+			r = unescapedR
+		}
+
+		// Tokenize
 		switch r {
 
-		// String
-		case '\'', '"':
+		case '\'', '"': // String
 			return TokenizeString(t, r)
 
-		// Whitespace
-		case '\n', '\f', ' ', '\t':
+		// TODO : collapse continous whitespace into 1 token
+		case '\n', '\f', ' ', '\t': // Whitespace
 			return TokenWhitespace{}
 
-		case '\r':
+		case '\r': // Whitespace
 			return TokenizeWhitespace(t)
 
 		default:
