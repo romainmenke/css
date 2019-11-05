@@ -40,7 +40,7 @@ ESCAPE_HEX_PEEK:
 	} else if !isHex { // Not newline or hex digit
 		switch peeked {
 		case '\n', '\r', 'f': // Is newline
-			err := b.UnreadByte()
+			err := b.UnreadRune()
 			if err != nil {
 				return 0, err
 			}
@@ -51,7 +51,12 @@ ESCAPE_HEX_PEEK:
 			r = peeked
 		}
 	} else {
-		return 0, errors.New("invalid escape sequence")
+		err := b.UnreadRune()
+		if err != nil {
+			return 0, err
+		}
+
+		return decodeHex(capturedHex)
 	}
 
 	return r, nil

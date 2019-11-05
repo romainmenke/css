@@ -2,7 +2,6 @@ package tokenizer
 
 import (
 	"errors"
-	"io"
 )
 
 type TokenString struct {
@@ -11,11 +10,7 @@ type TokenString struct {
 }
 
 func (t TokenString) String() string {
-	if t.Quote == SingleQuote {
-		return `'` + string(t.Value) + `'`
-	}
-
-	return `"` + string(t.Value) + `"`
+	return string(t.Value)
 }
 
 type QuoteKind int
@@ -46,27 +41,12 @@ func TokenizeString(t *Tokenizer, currentQuoteToken rune) Token {
 			return TokenError{error: errors.New("unexpected newline")}
 
 		case '\\':
-			t.tracking = append(t.tracking, r)
-
-			peeked, _, err := t.b.ReadRune()
-			if err == io.EOF {
-				return TokenString{
-					Value: t.tracking,
-					Quote: quoteKind,
-				}
-			}
+			unescapedR, err := Unescape(t.b, r)
 			if err != nil {
 				return TokenError{error: err}
 			}
 
-			if peeked == currentQuoteToken {
-				t.tracking = append(t.tracking, peeked)
-			} else {
-				err := t.b.UnreadRune()
-				if err != nil {
-					return TokenError{error: err}
-				}
-			}
+			t.tracking = append(t.tracking, unescapedR)
 
 		default:
 			t.tracking = append(t.tracking, r)

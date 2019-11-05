@@ -58,16 +58,6 @@ func (t *Tokenizer) Next() Token {
 			}
 		}
 
-		// ESCAPE
-		if r == '\\' {
-			unescapedR, err := Unescape(t.b, r)
-			if err != nil {
-				return TokenError{error: err}
-			}
-
-			r = unescapedR
-		}
-
 		// Tokenize
 		switch r {
 

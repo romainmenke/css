@@ -7,16 +7,15 @@ import (
 )
 
 func TestTokenString_OnlySelf(t *testing.T) {
-	sources := []string{
-		`'foo'`,
-		`'fo\o'`,
-		`'foo\''`,
-		`'foo'`,
-		`"foo"`,
-		`"foo\""`,
+	sources := map[string]string{
+		`'foo'`:    `foo`,
+		`'foo\26'`: `foo&`,
+		`'foo\''`:  `foo'`,
+		`"foo"`:    `foo`,
+		`"foo\""`:  `foo"`,
 	}
 
-	for _, source := range sources {
+	for source, expected := range sources {
 		t.Run(source, func(t *testing.T) {
 			tokenizer := New(bytes.NewBufferString(source))
 			sawToken := false
@@ -33,7 +32,7 @@ func TestTokenString_OnlySelf(t *testing.T) {
 
 				if sToken, ok := token.(TokenString); !ok {
 					t.Fatal(fmt.Sprintf("unexpected token of type : %T", token))
-				} else if sToken.String() != source {
+				} else if sToken.String() != expected {
 					t.Fatal(fmt.Sprintf("unexpected token string : %s", sToken.String()))
 				} else {
 					sawToken = true
