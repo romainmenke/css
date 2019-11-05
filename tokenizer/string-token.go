@@ -1,8 +1,6 @@
 package tokenizer
 
-import (
-	"errors"
-)
+import "io"
 
 type TokenString struct {
 	Value         []rune
@@ -32,6 +30,14 @@ func TokenizeString(t *Tokenizer, currentQuoteToken rune) Token {
 	for {
 		r, _, err := t.ReadRune()
 		if err != nil {
+			if err == io.EOF {
+				return TokenString{
+					Value:         t.tracking,
+					represenation: t.representation,
+					Quote:         quoteKind,
+				}
+			}
+
 			return TokenError{error: err}
 		}
 
@@ -44,7 +50,7 @@ func TokenizeString(t *Tokenizer, currentQuoteToken rune) Token {
 			}
 
 		case '\n', '\r', '\f':
-			return TokenError{error: errors.New("unexpected newline")}
+			return TokenBadString{}
 
 		case '\\':
 			unescapedR, err := Unescape(t, r)

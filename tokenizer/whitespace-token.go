@@ -12,8 +12,8 @@ func (t TokenWhitespace) String() string {
 	return " " // collapsed
 }
 
-func (t TokenWhitespace) Representation() string {
-	return string(t.represenation)
+func (t TokenWhitespace) Representation() []rune {
+	return t.represenation
 }
 
 func TokenizeWhitespace(t *Tokenizer) Token {

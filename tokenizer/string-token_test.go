@@ -9,6 +9,8 @@ import (
 func TestTokenString_OnlySelf(t *testing.T) {
 	sources := map[string]string{
 		`'foo'`:    `foo`,
+		`'foo\`:    `foo\`,
+		`'foo\\n'`: `foo\n`,
 		`'foo\26'`: `foo&`,
 		`'foo\''`:  `foo'`,
 		`"foo"`:    `foo`,
@@ -58,10 +60,8 @@ func TestTokenString_OnlySelf_NoNewLine(t *testing.T) {
 
 			for {
 				token := tokenizer.Next()
-				if errToken, ok := token.(TokenError); ok {
-					if errToken.Error() == "unexpected newline" {
-						break
-					}
+				if _, ok := token.(TokenBadString); ok {
+					break
 				}
 
 				if token != nil {

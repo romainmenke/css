@@ -15,7 +15,11 @@ func Unescape(reader RuneReader, r rune) (rune, error) {
 ESCAPE_HEX_PEEK:
 	peeked, _, err := reader.ReadRune()
 	if err == io.EOF {
-		return decodeHex(capturedHex)
+		if len(capturedHex) > 0 {
+			return decodeHex(capturedHex)
+		}
+
+		return r, nil
 	}
 	if err != nil {
 		return 0, err

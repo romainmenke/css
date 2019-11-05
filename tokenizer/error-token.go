@@ -15,3 +15,7 @@ func (t TokenError) Error() string {
 func (t TokenError) Err() error {
 	return t.error
 }
+
+func (t TokenError) Representation() []rune {
+	return nil
+}
