@@ -33,8 +33,10 @@ func TestTokenWhitespace_OnlySelf(t *testing.T) {
 					t.Fatal(errToken)
 				}
 
-				if _, ok := token.(TokenWhitespace); !ok {
+				if wToken, ok := token.(TokenWhitespace); !ok {
 					t.Fatal(fmt.Sprintf("unexpected token of type : %T", token))
+				} else if string(wToken.Representation()) != source {
+					t.Fatal(fmt.Sprintf("unexpected token reresentation : '%s'", string(wToken.Representation())))
 				} else {
 					sawToken = true
 				}

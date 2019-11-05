@@ -9,7 +9,7 @@ type TokenWhitespace struct {
 }
 
 func (t TokenWhitespace) String() string {
-	return ""
+	return " " // collapsed
 }
 
 func (t TokenWhitespace) Representation() string {
@@ -17,20 +17,23 @@ func (t TokenWhitespace) Representation() string {
 }
 
 func TokenizeWhitespace(t *Tokenizer) Token {
-	peeked, _, err := t.ReadRune()
-	if err == io.EOF {
-		return TokenWhitespace{
-			represenation: t.representation,
+	for {
+		peeked, _, err := t.ReadRune()
+		if err == io.EOF {
+			return TokenWhitespace{
+				represenation: t.representation,
+			}
 		}
-	}
-	if err != nil {
-		return TokenError{error: err}
-	}
-
-	if peeked != '\u000a' {
-		err := t.UnreadRune()
 		if err != nil {
 			return TokenError{error: err}
+		}
+
+		if peeked != '\u000a' && peeked != '\u0009' && peeked != '\u0020' {
+			err := t.UnreadRune()
+			if err != nil {
+				return TokenError{error: err}
+			}
+			break
 		}
 	}
 
