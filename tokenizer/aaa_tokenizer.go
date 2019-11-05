@@ -6,21 +6,51 @@ import (
 	"unicode"
 )
 
+type RuneReader interface {
+	ReadRune() (rune, int, error)
+	UnreadRune() error
+}
+
 type Tokenizer struct {
-	b        *bufio.Reader
-	tracking []rune
+	b              *bufio.Reader
+	tracking       []rune
+	representation []rune
 }
 
 func New(r io.Reader) *Tokenizer {
 	return &Tokenizer{
-		b:        bufio.NewReader(r),
-		tracking: make([]rune, 0, 1000),
+		b:              bufio.NewReader(r),
+		tracking:       make([]rune, 0, 1000),
+		representation: make([]rune, 0, 1000),
 	}
 }
 
+func (t *Tokenizer) ReadRune() (rune, int, error) {
+	r, size, err := t.b.ReadRune()
+	if size != 0 {
+		t.representation = append(t.representation, r)
+	}
+
+	return r, size, err
+}
+
+func (t *Tokenizer) UnreadRune() error {
+	err := t.b.UnreadRune()
+	if err != nil {
+		return err
+	}
+
+	t.representation = t.representation[:len(t.representation)-1]
+
+	return nil
+}
+
 func (t *Tokenizer) Next() Token {
+	t.tracking = t.tracking[:0]
+	t.representation = t.representation[:0]
+
 	for {
-		r, _, err := t.b.ReadRune()
+		r, _, err := t.ReadRune()
 		if err == io.EOF {
 			return TokenEOF{}
 		}
@@ -33,14 +63,14 @@ func (t *Tokenizer) Next() Token {
 		case '\u000d': //Replace any U+000D CARRIAGE RETURN (CR) code points or pairs of U+000D CARRIAGE RETURN (CR) followed by U+000A LINE FEED (LF), by a single U+000A LINE FEED (LF) code point.
 			r = '\u000a'
 
-			peeked, _, err := t.b.ReadRune()
+			peeked, _, err := t.ReadRune()
 			if err != io.EOF {
 				if err != nil {
 					return TokenError{error: err}
 				}
 
 				if peeked != '\u000a' {
-					err := t.b.UnreadRune()
+					err := t.UnreadRune()
 					if err != nil {
 						return TokenError{error: err}
 					}

@@ -34,6 +34,8 @@ func TestTokenString_OnlySelf(t *testing.T) {
 					t.Fatal(fmt.Sprintf("unexpected token of type : %T", token))
 				} else if sToken.String() != expected {
 					t.Fatal(fmt.Sprintf("unexpected token string : %s", sToken.String()))
+				} else if string(sToken.Representation()) != source {
+					t.Fatal(fmt.Sprintf("unexpected token reresentation : %s", string(sToken.Representation())))
 				} else {
 					sawToken = true
 				}

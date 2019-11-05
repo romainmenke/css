@@ -5,12 +5,17 @@ import (
 )
 
 type TokenString struct {
-	Value []rune
-	Quote QuoteKind
+	Value         []rune
+	represenation []rune
+	Quote         QuoteKind
 }
 
 func (t TokenString) String() string {
 	return string(t.Value)
+}
+
+func (t TokenString) Representation() []rune {
+	return t.represenation
 }
 
 type QuoteKind int
@@ -25,7 +30,7 @@ func TokenizeString(t *Tokenizer, currentQuoteToken rune) Token {
 	}
 
 	for {
-		r, _, err := t.b.ReadRune()
+		r, _, err := t.ReadRune()
 		if err != nil {
 			return TokenError{error: err}
 		}
@@ -33,15 +38,16 @@ func TokenizeString(t *Tokenizer, currentQuoteToken rune) Token {
 		switch r {
 		case currentQuoteToken:
 			return TokenString{
-				Value: t.tracking,
-				Quote: quoteKind,
+				Value:         t.tracking,
+				represenation: t.representation,
+				Quote:         quoteKind,
 			}
 
 		case '\n', '\r', '\f':
 			return TokenError{error: errors.New("unexpected newline")}
 
 		case '\\':
-			unescapedR, err := Unescape(t.b, r)
+			unescapedR, err := Unescape(t, r)
 			if err != nil {
 				return TokenError{error: err}
 			}

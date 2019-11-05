@@ -1,7 +1,6 @@
 package tokenizer
 
 import (
-	"bufio"
 	"encoding/hex"
 	"errors"
 	"io"
@@ -9,12 +8,12 @@ import (
 	"unicode/utf8"
 )
 
-func Unescape(b *bufio.Reader, r rune) (rune, error) {
+func Unescape(reader RuneReader, r rune) (rune, error) {
 	isHex := false
 	capturedHex := []rune{}
 
 ESCAPE_HEX_PEEK:
-	peeked, _, err := b.ReadRune()
+	peeked, _, err := reader.ReadRune()
 	if err == io.EOF {
 		return decodeHex(capturedHex)
 	}
@@ -40,7 +39,7 @@ ESCAPE_HEX_PEEK:
 	} else if !isHex { // Not newline or hex digit
 		switch peeked {
 		case '\n', '\r', 'f': // Is newline
-			err := b.UnreadRune()
+			err := reader.UnreadRune()
 			if err != nil {
 				return 0, err
 			}
@@ -51,7 +50,7 @@ ESCAPE_HEX_PEEK:
 			r = peeked
 		}
 	} else {
-		err := b.UnreadRune()
+		err := reader.UnreadRune()
 		if err != nil {
 			return 0, err
 		}
