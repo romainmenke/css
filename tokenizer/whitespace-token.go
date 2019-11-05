@@ -1,6 +1,8 @@
 package tokenizer
 
-import "io"
+import (
+	"io"
+)
 
 type TokenWhitespace struct{}
 
@@ -9,7 +11,7 @@ func (t TokenWhitespace) String() string {
 }
 
 func TokenizeWhitespace(t *Tokenizer) Token {
-	peeked, err := t.b.Peek(1)
+	peeked, _, err := t.b.ReadRune()
 	if err == io.EOF {
 		return TokenWhitespace{}
 	}
@@ -17,10 +19,10 @@ func TokenizeWhitespace(t *Tokenizer) Token {
 		return TokenError{error: err}
 	}
 
-	if peeked[0] == '\n' {
-		_, err := t.b.ReadByte()
+	if peeked != '\n' {
+		err := t.b.UnreadRune()
 		if err != nil {
-			panic(err) // already succesfully peeked, no error should happen
+			return TokenError{error: err}
 		}
 	}
 

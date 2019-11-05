@@ -11,6 +11,7 @@ func TestTokenWhitespace_OnlySelf(t *testing.T) {
 	sources := []string{
 		string('\n'),
 		string('\n') + string('\r'),
+		string('\r') + string('\n'),
 		string('\r'),
 		string('\f'),
 		string(' '),

@@ -6,7 +6,7 @@ import (
 )
 
 type TokenString struct {
-	Value []byte
+	Value []rune
 	Quote QuoteKind
 }
 
@@ -23,19 +23,19 @@ type QuoteKind int
 const SingleQuote QuoteKind = 0
 const DoubleQuote QuoteKind = 1
 
-func TokenizeString(t *Tokenizer, currentQuoteToken byte) Token {
+func TokenizeString(t *Tokenizer, currentQuoteToken rune) Token {
 	quoteKind := SingleQuote
 	if currentQuoteToken == '"' {
 		quoteKind = DoubleQuote
 	}
 
 	for {
-		b2, err := t.b.ReadByte()
+		r, _, err := t.b.ReadRune()
 		if err != nil {
 			return TokenError{error: err}
 		}
 
-		switch b2 {
+		switch r {
 		case currentQuoteToken:
 			return TokenString{
 				Value: t.tracking,
@@ -46,8 +46,9 @@ func TokenizeString(t *Tokenizer, currentQuoteToken byte) Token {
 			return TokenError{error: errors.New("unexpected newline")}
 
 		case '\\':
+			t.tracking = append(t.tracking, r)
 
-			peeked, err := t.b.Peek(1)
+			peeked, _, err := t.b.ReadRune()
 			if err == io.EOF {
 				return TokenString{
 					Value: t.tracking,
@@ -58,19 +59,17 @@ func TokenizeString(t *Tokenizer, currentQuoteToken byte) Token {
 				return TokenError{error: err}
 			}
 
-			t.tracking = append(t.tracking, b2)
-
-			if peeked[0] == currentQuoteToken {
-				b3, err := t.b.ReadByte()
+			if peeked == currentQuoteToken {
+				t.tracking = append(t.tracking, peeked)
+			} else {
+				err := t.b.UnreadRune()
 				if err != nil {
-					panic(err) // already succesfully peeked, no error should happen
+					return TokenError{error: err}
 				}
-
-				t.tracking = append(t.tracking, b3)
 			}
 
 		default:
-			t.tracking = append(t.tracking, b2)
+			t.tracking = append(t.tracking, r)
 		}
 	}
 }
