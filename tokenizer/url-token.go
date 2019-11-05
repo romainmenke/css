@@ -1,7 +1,9 @@
 package tokenizer
 
-type TokenUrl struct{}
+type TokenUrl struct {
+	Value []rune
+}
 
 func (t TokenUrl) String() string {
-	return ""
+	return string(t.Value)
 }

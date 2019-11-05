@@ -1,7 +1,9 @@
 package tokenizer
 
-type TokenDelim struct{}
+type TokenDelim struct {
+	Value rune
+}
 
 func (t TokenDelim) String() string {
-	return ""
+	return string(t.Value)
 }

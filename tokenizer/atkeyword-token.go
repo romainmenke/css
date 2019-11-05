@@ -1,7 +1,9 @@
 package tokenizer
 
-type TokenAtKeyword struct{}
+type TokenAtKeyword struct {
+	Value []rune
+}
 
 func (t TokenAtKeyword) String() string {
-	return ""
+	return string(t.Value)
 }

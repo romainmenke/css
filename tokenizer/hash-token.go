@@ -1,11 +1,12 @@
 package tokenizer
 
 type TokenHash struct {
-	Type HashTokenType
+	Type  HashTokenType
+	Value []rune
 }
 
 func (t TokenHash) String() string {
-	return ""
+	return string(t.Value)
 }
 
 // Default is "unrestricted"

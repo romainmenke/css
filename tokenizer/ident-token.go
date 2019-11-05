@@ -1,7 +1,9 @@
 package tokenizer
 
-type TokenIdent struct{}
+type TokenIdent struct {
+	Value []rune
+}
 
 func (t TokenIdent) String() string {
-	return ""
+	return string(t.Value)
 }
