@@ -5,17 +5,15 @@ import (
 	"unicode"
 )
 
-func CheckIfTwoCodePointsAreAValidEscape(reader RuneReader, first rune) bool {
-	if first != '\u005c' { // "\"
-		return false
-	}
-
-	second, _, err := reader.ReadRune()
+func CheckIfTwoCodePointsAreAValidEscape(reader RuneReader) bool {
+	first, second, err := reader.PeekTwoRunes()
 	if err != nil {
 		return false
 	}
 
-	defer reader.UnreadRune()
+	if first != '\u005c' { // "\"
+		return false
+	}
 
 	if second == '\u000a' {
 		return false
@@ -24,65 +22,50 @@ func CheckIfTwoCodePointsAreAValidEscape(reader RuneReader, first rune) bool {
 	return true
 }
 
-func CheckIfThreeCodePointsWouldStartAnIdentifier(reader RuneReader, first rune) bool {
+func CheckIfThreeCodePointsWouldStartAnIdentifier(reader RuneReader) bool {
+	first, second, third, err := reader.PeekThreeRunes()
+	if err != nil {
+		return false
+	}
+
 	switch {
 	case first == '\u002d': // "-"
-		second, _, err := reader.ReadRune()
-		if err != nil {
-			return false
-		}
-
-		defer reader.UnreadRune()
-
 		switch {
 		case second == '\u002d': // "-"
 			return true
 		case unicode.In(second, NameStartCodePoint...):
 			return true
-		case CheckIfTwoCodePointsAreAValidEscape(reader, second):
-			return true
+		case second != '\u005c':
+			return third != '\u000a'
 		default:
 			return false
 		}
 
-	case first == '\\': // "\"
-		return CheckIfTwoCodePointsAreAValidEscape(reader, first)
+	case first == '\u005c': // "\"
+		return second != '\u000a'
 	default:
 		return false
 	}
 }
 
-func CheckIfThreeCodePointsWouldStartANumber(reader RuneReader, first rune) bool {
+func CheckIfThreeCodePointsWouldStartANumber(reader RuneReader) bool {
+	first, second, third, err := reader.PeekThreeRunes()
+	if err != nil {
+		return false
+	}
+
 	switch {
 	case first == '\u002b' || first == '\u002d': // "+" or "-"
-		second, _, err := reader.ReadRune()
-		if err != nil {
-			return false
-		}
-
-		defer reader.UnreadRune()
-
 		switch {
 		case unicode.In(second, unicode.Digit):
 			return true
 		case second == '\u002e': // "."
-			return CheckIfThreeCodePointsWouldStartANumber(reader, second)
+			return unicode.In(third, unicode.Digit)
 		default:
 			return false
 		}
 	case first == '\u002e': // "."
-		second, _, err := reader.ReadRune()
-		if err != nil {
-			return false
-		}
-
-		defer reader.UnreadRune()
-
-		if unicode.In(second, unicode.Digit) {
-			return true
-		}
-
-		return false
+		return unicode.In(second, unicode.Digit)
 	case unicode.In(first, unicode.Digit):
 		return true
 	default:
@@ -102,4 +85,13 @@ func CheckIfNextIsEOF(reader RuneReader) bool {
 	reader.UnreadRune()
 
 	return false
+}
+
+func CheckIfFirstCodePointIsInRangeTable(reader RuneReader, rt ...*unicode.RangeTable) bool {
+	first, err := reader.PeekOneRune()
+	if err != nil {
+		return false
+	}
+
+	return unicode.In(first, rt...)
 }

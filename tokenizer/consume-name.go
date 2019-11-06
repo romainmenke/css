@@ -1,34 +1,50 @@
 package tokenizer
 
-import "unicode"
+import (
+	"io"
+	"unicode"
+)
 
 func ConsumeName(t *Tokenizer) ([]rune, error) {
 	name := make([]rune, 0, 1000)
 
 	for {
-		r, _, err := t.ReadRune()
-		if err != nil {
-			return nil, err
-		}
+		if CheckIfTwoCodePointsAreAValidEscape(t) {
+			r, _, err := t.ReadRune()
+			if err == io.EOF {
+				return name, nil
+			}
+			if err != nil {
+				return nil, err
+			}
 
-		switch {
-		case CheckIfTwoCodePointsAreAValidEscape(t, r):
 			unescaped, err := Unescape(t, r)
 			if err != nil {
 				return nil, err
 			}
 
 			name = append(name, unescaped)
+			continue
+		}
 
-		case unicode.In(r, NameCodePoint...):
-			name = append(name, r)
-		default:
-			err := t.UnreadRune()
-			if err != nil {
-				return nil, err
-			}
-
+		r, _, err := t.ReadRune()
+		if err == io.EOF {
 			return name, nil
 		}
+		if err != nil {
+			return nil, err
+		}
+
+		if unicode.In(r, NameCodePoint...) {
+			name = append(name, r)
+			continue
+		}
+
+		err = t.UnreadRune()
+		if err != nil {
+			return nil, err
+		}
+
+		return name, nil
 	}
 }

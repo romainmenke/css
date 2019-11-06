@@ -17,7 +17,7 @@ func TestUnescape(t *testing.T) {
 
 	for escaped, expected := range sources {
 		t.Run(strconv.Quote(escaped), func(t *testing.T) {
-			reader := bufio.NewReader(bytes.NewBufferString(escaped))
+			reader := &BufioRuneReader{bufio.NewReader(bytes.NewBufferString(escaped))}
 			r, _, err := reader.ReadRune()
 			if err != nil {
 				t.Fatal(err)
