@@ -81,23 +81,27 @@ func (t *Tokenizer) Next() Token {
 			}
 
 		case '\'', '"': // String
-			return TokenizeString(t, r)
+			return ConsumeString(t, r)
 
-		// TODO : collapse continous whitespace into 1 token
 		case '\u000a', '\u0009', '\u0020': // Whitespace
-			return TokenizeWhitespace(t)
+			return ConsumeWhiteSpace(t)
 
-		case '/':
-			token := TokenizeComment(t)
+		case '/': // Comment
+			token := ConsumeComment(t)
 			if token != nil {
+				// Should return nothing
+				// https://drafts.csswg.org/css-syntax-3/#consume-comment
+				// But comments can be interesting in our context so return a TokenComment
 				return token
 			}
 
-		default:
-			return TokenDelim{
-				Value:         r,
-				represenation: t.representation,
-			}
+		case '#': // Number Sign
+			return TokenizeHashFromNumberSign(t)
+		}
+
+		return TokenDelim{
+			Value:         r,
+			represenation: t.representation,
 		}
 	}
 }

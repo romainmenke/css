@@ -1,25 +1,12 @@
 package tokenizer
 
-type TokenComment struct {
-	Value         []rune
-	represenation []rune
-}
-
-func (t TokenComment) String() string {
-	return string(t.Value)
-}
-
-func (t TokenComment) Representation() []rune {
-	return t.represenation
-}
-
-func TokenizeComment(t *Tokenizer) Token {
-	rOpen, _, err := t.ReadRune()
+func ConsumeComment(t *Tokenizer) Token {
+	open, _, err := t.ReadRune()
 	if err != nil {
 		return TokenError{error: err}
 	}
 
-	if rOpen != '*' {
+	if open != '*' {
 		err := t.UnreadRune()
 		if err != nil {
 			return TokenError{error: err}
@@ -35,12 +22,12 @@ func TokenizeComment(t *Tokenizer) Token {
 		}
 
 		if r == '*' {
-			rClose, _, err := t.ReadRune()
+			close, _, err := t.ReadRune()
 			if err != nil {
 				return TokenError{error: err}
 			}
 
-			if rClose == '/' {
+			if close == '/' {
 				return TokenComment{
 					Value:         t.tracking,
 					represenation: t.representation,

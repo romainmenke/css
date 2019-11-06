@@ -9,7 +9,7 @@ import (
 func TestTokenString_OnlySelf(t *testing.T) {
 	sources := map[string]string{
 		`'foo'`:    `foo`,
-		`'foo\`:    `foo\`,
+		`'foo\`:    `foo`,
 		`'foo\\n'`: `foo\n`,
 		`'foo\26'`: `foo&`,
 		`'foo\''`:  `foo'`,

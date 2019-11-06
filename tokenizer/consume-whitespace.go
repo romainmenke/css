@@ -1,22 +1,8 @@
 package tokenizer
 
-import (
-	"io"
-)
+import "io"
 
-type TokenWhitespace struct {
-	represenation []rune
-}
-
-func (t TokenWhitespace) String() string {
-	return " " // collapsed
-}
-
-func (t TokenWhitespace) Representation() []rune {
-	return t.represenation
-}
-
-func TokenizeWhitespace(t *Tokenizer) Token {
+func ConsumeWhiteSpace(t *Tokenizer) Token {
 	for {
 		peeked, _, err := t.ReadRune()
 		if err == io.EOF {
