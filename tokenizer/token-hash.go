@@ -34,7 +34,7 @@ func TokenizeHashFromNumberSign(t *Tokenizer) Token {
 		}
 
 		token.Value = name
-		token.represenation = t.representation
+		token.represenation = t.Representation()
 		return token
 	default:
 		r, _, err := t.ReadRune()
@@ -44,7 +44,7 @@ func TokenizeHashFromNumberSign(t *Tokenizer) Token {
 
 		return TokenDelim{
 			Value:         r,
-			represenation: t.representation,
+			represenation: t.Representation(),
 		}
 	}
 }

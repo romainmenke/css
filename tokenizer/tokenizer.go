@@ -3,25 +3,25 @@ package tokenizer
 import (
 	"bufio"
 	"io"
+
+	"github.com/romainmenke/css/runepeeker"
 )
 
 type Tokenizer struct {
-	b              *bufio.Reader
-	tracking       []rune
-	representation []rune
+	reader   *runepeeker.Peeker
+	tracking []rune
 }
 
 func New(r io.Reader) *Tokenizer {
 	return &Tokenizer{
-		b:              bufio.NewReader(r),
-		tracking:       make([]rune, 0, 1000),
-		representation: make([]rune, 0, 1000),
+		reader:   runepeeker.New(bufio.NewReader(r)),
+		tracking: make([]rune, 0, 1000),
 	}
 }
 
 func (t *Tokenizer) Next() Token {
 	t.tracking = t.tracking[:0]
-	t.representation = t.representation[:0]
+	t.reader.ResetRepresentation()
 
 	for {
 		r, _, err := t.ReadRune()
@@ -37,47 +37,47 @@ func (t *Tokenizer) Next() Token {
 
 		case '(': // Left Parenthesis
 			return TokenParenthesisLeft{
-				represenation: t.representation,
+				represenation: t.Representation(),
 			}
 
 		case ')': // Right Parenthesis
 			return TokenParenthesisRight{
-				represenation: t.representation,
+				represenation: t.Representation(),
 			}
 
 		case '[': // Left Square Bracket
 			return TokenSquareBracketLeft{
-				represenation: t.representation,
+				represenation: t.Representation(),
 			}
 
 		case ']': // Right Square Bracket
 			return TokenSquareBracketRight{
-				represenation: t.representation,
+				represenation: t.Representation(),
 			}
 
 		case '{': // Left Curly Bracket
 			return TokenCurlyBracketLeft{
-				represenation: t.representation,
+				represenation: t.Representation(),
 			}
 
 		case '}': // Right Curly Bracket
 			return TokenCurlyBracketRight{
-				represenation: t.representation,
+				represenation: t.Representation(),
 			}
 
 		case ',': // Comma
 			return TokenComma{
-				represenation: t.representation,
+				represenation: t.Representation(),
 			}
 
 		case ':': // Colon
 			return TokenColon{
-				represenation: t.representation,
+				represenation: t.Representation(),
 			}
 
 		case ';': // Semicolon
 			return TokenSemicolon{
-				represenation: t.representation,
+				represenation: t.Representation(),
 			}
 
 		case '\'', '"': // String
@@ -101,7 +101,7 @@ func (t *Tokenizer) Next() Token {
 
 		return TokenDelim{
 			Value:         r,
-			represenation: t.representation,
+			represenation: t.Representation(),
 		}
 	}
 }

@@ -27,7 +27,7 @@ func ConsumeName(t *Tokenizer) ([]rune, error) {
 			continue
 		}
 
-		r, _, err := t.ReadRune()
+		peeked, err := t.PeekOneRune()
 		if err == io.EOF {
 			return name, nil
 		}
@@ -35,14 +35,14 @@ func ConsumeName(t *Tokenizer) ([]rune, error) {
 			return nil, err
 		}
 
-		if unicode.In(r, NameCodePoint...) {
-			name = append(name, r)
-			continue
-		}
+		if unicode.In(peeked, NameCodePoint...) {
+			rr, _, err := t.ReadRune()
+			if err != nil {
+				return nil, err
+			}
 
-		err = t.UnreadRune()
-		if err != nil {
-			return nil, err
+			name = append(name, rr)
+			continue
 		}
 
 		return name, nil

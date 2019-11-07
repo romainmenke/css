@@ -8,17 +8,17 @@ import (
 )
 
 func TestTokenWhitespace_OnlySelf(t *testing.T) {
-	sources := []string{
-		string('\n'),
-		string('\n') + string('\r'),
-		string('\r') + string('\n'),
-		string('\r'),
-		string('\f'),
-		string(' '),
-		string('\t'),
+	sources := map[string]string{
+		string('\n'):                string('\n'),
+		string('\n') + string('\r'): string('\n') + string('\n'),
+		string('\r') + string('\n'): string('\n'),
+		string('\r'):                string('\n'),
+		string('\f'):                string('\n'),
+		string(' '):                 string(' '),
+		string('\t'):                string('\t'),
 	}
 
-	for _, source := range sources {
+	for source, expected := range sources {
 		t.Run(strconv.Quote(source), func(t *testing.T) {
 			tokenizer := New(bytes.NewBufferString(source))
 			sawToken := false
@@ -35,8 +35,18 @@ func TestTokenWhitespace_OnlySelf(t *testing.T) {
 
 				if wToken, ok := token.(TokenWhitespace); !ok {
 					t.Fatal(fmt.Sprintf("unexpected token of type : %T", token))
-				} else if string(wToken.Representation()) != source {
-					t.Fatal(fmt.Sprintf("unexpected token representation : '%s'", string(wToken.Representation())))
+				} else if string(wToken.Representation()) != expected {
+					rep := ""
+					for _, r := range wToken.Representation() {
+						rep += fmt.Sprintf("%U", r)
+					}
+
+					in := ""
+					for _, r := range source {
+						in += fmt.Sprintf("%U", r)
+					}
+
+					t.Fatal(fmt.Sprintf("unexpected token representation : %s, input : %s", rep, in))
 				} else {
 					sawToken = true
 				}

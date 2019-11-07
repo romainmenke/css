@@ -1,18 +1,18 @@
 package tokenizer
 
 func ConsumeComment(t *Tokenizer) Token {
-	open, _, err := t.ReadRune()
+	open, err := t.PeekOneRune()
 	if err != nil {
 		return TokenError{error: err}
 	}
 
 	if open != '*' {
-		err := t.UnreadRune()
-		if err != nil {
-			return TokenError{error: err}
-		}
-
 		return nil
+	}
+
+	_, _, err = t.ReadRune()
+	if err != nil {
+		return TokenError{error: err}
 	}
 
 	for {
@@ -22,7 +22,7 @@ func ConsumeComment(t *Tokenizer) Token {
 		}
 
 		if r == '*' {
-			close, _, err := t.ReadRune()
+			close, err := t.PeekOneRune()
 			if err != nil {
 				return TokenError{error: err}
 			}
@@ -30,13 +30,8 @@ func ConsumeComment(t *Tokenizer) Token {
 			if close == '/' {
 				return TokenComment{
 					Value:         t.tracking,
-					represenation: t.representation,
+					represenation: t.Representation(),
 				}
-			}
-
-			err = t.UnreadRune()
-			if err != nil {
-				return TokenError{error: err}
 			}
 		}
 

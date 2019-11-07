@@ -13,7 +13,7 @@ func Unescape(reader RuneReader, r rune) (rune, error) {
 	capturedHex := []rune{}
 
 ESCAPE_HEX_PEEK:
-	peeked, _, err := reader.ReadRune()
+	peeked, err := reader.PeekOneRune()
 	if err == io.EOF {
 		if len(capturedHex) > 0 {
 			return decodeHex(capturedHex)
@@ -31,34 +31,40 @@ ESCAPE_HEX_PEEK:
 				peeked == '\f' ||
 				peeked == ' ' ||
 				peeked == '\t')) {
+		_, _, err := reader.ReadRune()
+		if err != nil {
+			return 0, err
+		}
+
 		return decodeHex(capturedHex)
 	}
 
 	if unicode.In(peeked, unicode.Hex_Digit) { // Is Hex
 		isHex = true
-		capturedHex = append(capturedHex, peeked)
+
+		rr, _, err := reader.ReadRune()
+		if err != nil {
+			return 0, err
+		}
+
+		capturedHex = append(capturedHex, rr)
 
 		goto ESCAPE_HEX_PEEK
 
 	} else if !isHex { // Not newline or hex digit
 		switch peeked {
 		case '\n', '\r', 'f': // Is newline
-			err := reader.UnreadRune()
+			return r, nil // ???
+		default: // Is not newline or hex digit
+			// unescaped thing
+			_, _, err := reader.ReadRune()
 			if err != nil {
 				return 0, err
 			}
 
-			return r, nil // ???
-		default: // Is not newline or hex digit
-			// unescaped thing
 			r = peeked
 		}
 	} else {
-		err := reader.UnreadRune()
-		if err != nil {
-			return 0, err
-		}
-
 		return decodeHex(capturedHex)
 	}
 

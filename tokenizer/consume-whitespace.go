@@ -4,10 +4,10 @@ import "io"
 
 func ConsumeWhiteSpace(t *Tokenizer) Token {
 	for {
-		peeked, _, err := t.ReadRune()
+		peeked, err := t.PeekOneRune()
 		if err == io.EOF {
 			return TokenWhitespace{
-				represenation: t.representation,
+				represenation: t.Representation(),
 			}
 		}
 		if err != nil {
@@ -15,15 +15,16 @@ func ConsumeWhiteSpace(t *Tokenizer) Token {
 		}
 
 		if peeked != '\u000a' && peeked != '\u0009' && peeked != '\u0020' {
-			err := t.UnreadRune()
-			if err != nil {
-				return TokenError{error: err}
-			}
 			break
+		}
+
+		_, _, err = t.ReadRune()
+		if err != nil {
+			return TokenError{error: err}
 		}
 	}
 
 	return TokenWhitespace{
-		represenation: t.representation,
+		represenation: t.Representation(),
 	}
 }

@@ -74,15 +74,13 @@ func CheckIfThreeCodePointsWouldStartANumber(reader RuneReader) bool {
 }
 
 func CheckIfNextIsEOF(reader RuneReader) bool {
-	_, _, err := reader.ReadRune()
+	_, err := reader.PeekOneRune()
 	if err == io.EOF {
 		return true
 	}
 	if err != nil {
 		return false // should not happen
 	}
-
-	reader.UnreadRune()
 
 	return false
 }
