@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"io"
 
-	"github.com/romainmenke/css/streampreprocessor"
+	"github.com/romainmenke/css/tokenizer/streampreprocessor"
 )
 
 type RuneReader interface {

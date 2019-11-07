@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"io"
 
-	"github.com/romainmenke/css/runepeeker"
+	"github.com/romainmenke/css/tokenizer/runepeeker"
 )
 
 type Tokenizer struct {
