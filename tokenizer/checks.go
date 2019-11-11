@@ -50,7 +50,7 @@ func CheckIfThreeCodePointsWouldStartAnIdentifier(reader RuneReader) bool {
 
 func CheckIfThreeCodePointsWouldStartANumber(reader RuneReader) bool {
 	first, second, third, err := reader.PeekThreeRunes()
-	if err != nil {
+	if err != nil && err != io.EOF {
 		return false
 	}
 

@@ -21,7 +21,7 @@ func (t *Tokenizer) Representation() []rune {
 
 func (t *Tokenizer) PeekOneRune() (rune, error) {
 	runes, _, err := t.reader.PeekRunes(1)
-	if err != nil {
+	if err != nil && err != io.EOF {
 		return 0, err
 	}
 
@@ -34,7 +34,7 @@ func (t *Tokenizer) PeekOneRune() (rune, error) {
 
 func (t *Tokenizer) PeekTwoRunes() (rune, rune, error) {
 	runes, _, err := t.reader.PeekRunes(2)
-	if err != nil {
+	if err != nil && err != io.EOF {
 		return 0, 0, err
 	}
 
@@ -50,7 +50,7 @@ func (t *Tokenizer) PeekTwoRunes() (rune, rune, error) {
 
 func (t *Tokenizer) PeekThreeRunes() (rune, rune, rune, error) {
 	runes, _, err := t.reader.PeekRunes(3)
-	if err != nil {
+	if err != nil && err != io.EOF {
 		return 0, 0, 0, err
 	}
 

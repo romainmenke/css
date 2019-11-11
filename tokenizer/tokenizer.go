@@ -24,7 +24,7 @@ func (t *Tokenizer) Next() Token {
 	t.reader.ResetRepresentation()
 
 	for {
-		r, _, err := t.ReadRune()
+		r, size, err := t.ReadRune()
 		if err == io.EOF || (err != nil && err.Error() == io.EOF.Error()) {
 			return TokenEOF{}
 		}
@@ -78,6 +78,104 @@ func (t *Tokenizer) Next() Token {
 		case ';': // Semicolon
 			return TokenSemicolon{
 				represenation: t.Representation(),
+			}
+
+		case '+': // Plus
+			err := t.reader.UnreadRune(r, size)
+			if err != nil {
+				return TokenError{error: err}
+			}
+
+			if CheckIfThreeCodePointsWouldStartANumber(t) {
+				v, err := ConsumeNumber(t, r)
+				if err == io.EOF {
+					return TokenEOF{}
+				}
+				if err != nil {
+					return TokenError{error: err}
+				}
+				if v == nil {
+					continue
+				}
+
+				switch vv := v.(type) {
+				case float64:
+					return TokenNumber{
+						floatValue:     vv,
+						intValue:       int64(vv),
+						Type:           NumberTypeNumber,
+						representation: t.Representation(),
+					}
+				case int64:
+					return TokenNumber{
+						floatValue:     float64(vv),
+						intValue:       vv,
+						Type:           NumberTypeInteger,
+						representation: t.Representation(),
+					}
+				case int:
+					return TokenNumber{
+						floatValue:     float64(vv),
+						intValue:       int64(vv),
+						Type:           NumberTypeInteger,
+						representation: t.Representation(),
+					}
+				}
+
+			} else {
+				return TokenDelim{
+					Value:         r,
+					represenation: t.Representation(),
+				}
+			}
+
+		case '-': // Minus
+			err := t.reader.UnreadRune(r, size)
+			if err != nil {
+				return TokenError{error: err}
+			}
+
+			if CheckIfThreeCodePointsWouldStartANumber(t) {
+				v, err := ConsumeNumber(t, r)
+				if err == io.EOF {
+					return TokenEOF{}
+				}
+				if err != nil {
+					return TokenError{error: err}
+				}
+				if v == nil {
+					continue
+				}
+
+				switch vv := v.(type) {
+				case float64:
+					return TokenNumber{
+						floatValue:     vv,
+						intValue:       int64(vv),
+						Type:           NumberTypeNumber,
+						representation: t.Representation(),
+					}
+				case int64:
+					return TokenNumber{
+						floatValue:     float64(vv),
+						intValue:       vv,
+						Type:           NumberTypeInteger,
+						representation: t.Representation(),
+					}
+				case int:
+					return TokenNumber{
+						floatValue:     float64(vv),
+						intValue:       int64(vv),
+						Type:           NumberTypeInteger,
+						representation: t.Representation(),
+					}
+				}
+
+			} else {
+				return TokenDelim{
+					Value:         r,
+					represenation: t.Representation(),
+				}
 			}
 
 		case '\'', '"': // String

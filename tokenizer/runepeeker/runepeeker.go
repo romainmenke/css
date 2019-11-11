@@ -2,6 +2,7 @@ package runepeeker
 
 import (
 	"bufio"
+	"errors"
 	"io"
 
 	"github.com/romainmenke/css/tokenizer/streampreprocessor"
@@ -71,7 +72,11 @@ func (p *Peeker) readRune() (rune, int, error) {
 	return r, size, err
 }
 
-func (p *Peeker) unreadRune(r rune, size int) {
+func (p *Peeker) UnreadRune(r rune, size int) error {
+	if len(p.representation) == 0 {
+		return errors.New("invalid unread")
+	}
+
 	p.peekBuffer = append(p.peekBuffer, 0)
 	copy(p.peekBuffer[1:], p.peekBuffer)
 	p.peekBuffer[0] = r
@@ -79,6 +84,10 @@ func (p *Peeker) unreadRune(r rune, size int) {
 	p.peekSizes = append(p.peekSizes, 0)
 	copy(p.peekSizes[1:], p.peekSizes)
 	p.peekSizes[0] = size
+
+	p.representation = p.representation[:len(p.representation)-1]
+
+	return nil
 }
 
 func (p *Peeker) ReadRune() (rune, int, error) {
@@ -98,6 +107,9 @@ func (p *Peeker) PeekRunes(n int) ([]rune, int, error) {
 	toPeek := n - len(p.peekBuffer)
 	for i := 0; i < toPeek; i++ {
 		r, size, err := p.reader.ReadRune()
+		if err == io.EOF {
+			break
+		}
 		if err != nil {
 			return nil, 0, err
 		}
@@ -107,10 +119,14 @@ func (p *Peeker) PeekRunes(n int) ([]rune, int, error) {
 		p.peekSizes = append(p.peekSizes, size)
 	}
 
+	if n > len(p.peekBuffer) {
+		n = len(p.peekBuffer)
+	}
+
 	out := make([]rune, 0, n)
 	for i := 0; i < n; i++ {
 		out = append(out, p.peekBuffer[i])
 	}
 
-	return p.peekBuffer, totalSize, nil
+	return out, totalSize, nil
 }

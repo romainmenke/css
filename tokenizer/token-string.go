@@ -1,9 +1,9 @@
 package tokenizer
 
 type TokenString struct {
-	Value         []rune
-	represenation []rune
-	Quote         QuoteKind
+	Value          []rune
+	representation []rune
+	Quote          QuoteKind
 }
 
 func (t TokenString) String() string {
@@ -11,7 +11,7 @@ func (t TokenString) String() string {
 }
 
 func (t TokenString) Representation() []rune {
-	return t.represenation
+	return t.representation
 }
 
 type QuoteKind int
