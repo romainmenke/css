@@ -7,7 +7,7 @@ func ConsumeWhiteSpace(t *Tokenizer) Token {
 		peeked, err := t.PeekOneRune()
 		if err == io.EOF {
 			return TokenWhitespace{
-				represenation: t.Representation(),
+				representation: t.Representation(),
 			}
 		}
 		if err != nil {
@@ -25,6 +25,6 @@ func ConsumeWhiteSpace(t *Tokenizer) Token {
 	}
 
 	return TokenWhitespace{
-		represenation: t.Representation(),
+		representation: t.Representation(),
 	}
 }

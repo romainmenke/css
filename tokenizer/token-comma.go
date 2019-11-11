@@ -1,7 +1,7 @@
 package tokenizer
 
 type TokenComma struct {
-	represenation []rune
+	representation []rune
 }
 
 func (t TokenComma) String() string {
@@ -9,5 +9,5 @@ func (t TokenComma) String() string {
 }
 
 func (t TokenComma) Representation() []rune {
-	return t.represenation
+	return t.representation
 }

@@ -1,7 +1,7 @@
 package tokenizer
 
 type TokenWhitespace struct {
-	represenation []rune
+	representation []rune
 }
 
 func (t TokenWhitespace) String() string {
@@ -9,5 +9,5 @@ func (t TokenWhitespace) String() string {
 }
 
 func (t TokenWhitespace) Representation() []rune {
-	return t.represenation
+	return t.representation
 }

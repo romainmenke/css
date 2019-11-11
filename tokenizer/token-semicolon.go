@@ -1,7 +1,7 @@
 package tokenizer
 
 type TokenSemicolon struct {
-	represenation []rune
+	representation []rune
 }
 
 func (t TokenSemicolon) String() string {
@@ -9,5 +9,5 @@ func (t TokenSemicolon) String() string {
 }
 
 func (t TokenSemicolon) Representation() []rune {
-	return t.represenation
+	return t.representation
 }

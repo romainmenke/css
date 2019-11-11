@@ -3,6 +3,7 @@ package tokenizer
 import (
 	"bufio"
 	"io"
+	"unicode"
 
 	"github.com/romainmenke/css/tokenizer/runepeeker"
 )
@@ -37,47 +38,47 @@ func (t *Tokenizer) Next() Token {
 
 		case '(': // Left Parenthesis
 			return TokenParenthesisLeft{
-				represenation: t.Representation(),
+				representation: t.Representation(),
 			}
 
 		case ')': // Right Parenthesis
 			return TokenParenthesisRight{
-				represenation: t.Representation(),
+				representation: t.Representation(),
 			}
 
 		case '[': // Left Square Bracket
 			return TokenSquareBracketLeft{
-				represenation: t.Representation(),
+				representation: t.Representation(),
 			}
 
 		case ']': // Right Square Bracket
 			return TokenSquareBracketRight{
-				represenation: t.Representation(),
+				representation: t.Representation(),
 			}
 
 		case '{': // Left Curly Bracket
 			return TokenCurlyBracketLeft{
-				represenation: t.Representation(),
+				representation: t.Representation(),
 			}
 
 		case '}': // Right Curly Bracket
 			return TokenCurlyBracketRight{
-				represenation: t.Representation(),
+				representation: t.Representation(),
 			}
 
 		case ',': // Comma
 			return TokenComma{
-				represenation: t.Representation(),
+				representation: t.Representation(),
 			}
 
 		case ':': // Colon
 			return TokenColon{
-				represenation: t.Representation(),
+				representation: t.Representation(),
 			}
 
 		case ';': // Semicolon
 			return TokenSemicolon{
-				represenation: t.Representation(),
+				representation: t.Representation(),
 			}
 
 		case '+': // Plus
@@ -91,11 +92,21 @@ func (t *Tokenizer) Next() Token {
 			}
 
 			return TokenDelim{
-				Value:         r,
-				represenation: t.Representation(),
+				Value:          r,
+				representation: t.Representation(),
 			}
 
 		case '-': // Minus
+			p1, p2, _ := t.PeekTwoRunes()
+			if p1 == '-' && p2 == '>' {
+				t.ReadRune()
+				t.ReadRune()
+
+				return TokenCDC{
+					representation: t.Representation(),
+				}
+			}
+
 			err := t.reader.UnreadRune(r, size)
 			if err != nil {
 				return TokenError{error: err}
@@ -105,9 +116,13 @@ func (t *Tokenizer) Next() Token {
 				return ConsumeNumeric(t, r)
 			}
 
+			if CheckIfThreeCodePointsWouldStartAnIdentifier(t) {
+				// Consume Ident Like Token
+			}
+
 			return TokenDelim{
-				Value:         r,
-				represenation: t.Representation(),
+				Value:          r,
+				representation: t.Representation(),
 			}
 
 		case '\'', '"': // String
@@ -125,13 +140,41 @@ func (t *Tokenizer) Next() Token {
 				return token
 			}
 
+		case '@': // Comment
+			if CheckIfThreeCodePointsWouldStartAnIdentifier(t) {
+				name, err := ConsumeName(t)
+				if err != nil {
+					return TokenError{error: err}
+				}
+
+				return TokenAtKeyword{
+					Value:          name,
+					representation: t.Representation(),
+				}
+			}
+
+			return TokenDelim{
+				Value:          r,
+				representation: t.Representation(),
+			}
 		case '#': // Number Sign
 			return TokenizeHashFromNumberSign(t)
 		}
 
+		if unicode.In(r, unicode.Digit) {
+			err := t.reader.UnreadRune(r, size)
+			if err != nil {
+				return TokenError{error: err}
+			}
+
+			if CheckIfThreeCodePointsWouldStartANumber(t) {
+				return ConsumeNumeric(t, r)
+			}
+		}
+
 		return TokenDelim{
-			Value:         r,
-			represenation: t.Representation(),
+			Value:          r,
+			representation: t.Representation(),
 		}
 	}
 }

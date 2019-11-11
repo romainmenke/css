@@ -2,7 +2,7 @@ package tokenizer
 
 type TokenDelim struct {
 	Value         rune
-	represenation []rune
+	representation []rune
 }
 
 func (t TokenDelim) String() string {
@@ -10,5 +10,5 @@ func (t TokenDelim) String() string {
 }
 
 func (t TokenDelim) Representation() []rune {
-	return t.represenation
+	return t.representation
 }

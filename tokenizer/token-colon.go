@@ -1,7 +1,7 @@
 package tokenizer
 
 type TokenColon struct {
-	represenation []rune
+	representation []rune
 }
 
 func (t TokenColon) String() string {
@@ -9,5 +9,5 @@ func (t TokenColon) String() string {
 }
 
 func (t TokenColon) Representation() []rune {
-	return t.represenation
+	return t.representation
 }

@@ -1,7 +1,7 @@
 package tokenizer
 
 type TokenSquareBracketLeft struct {
-	represenation []rune
+	representation []rune
 }
 
 func (t TokenSquareBracketLeft) String() string {
@@ -9,5 +9,5 @@ func (t TokenSquareBracketLeft) String() string {
 }
 
 func (t TokenSquareBracketLeft) Representation() []rune {
-	return t.represenation
+	return t.representation
 }

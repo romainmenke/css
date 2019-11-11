@@ -3,7 +3,7 @@ package tokenizer
 type TokenHash struct {
 	Type          HashTokenType
 	Value         []rune
-	represenation []rune
+	representation []rune
 }
 
 func (t TokenHash) String() string {
@@ -11,7 +11,7 @@ func (t TokenHash) String() string {
 }
 
 func (t TokenHash) Representation() []rune {
-	return t.represenation
+	return t.representation
 }
 
 // Default is "unrestricted"
@@ -34,7 +34,7 @@ func TokenizeHashFromNumberSign(t *Tokenizer) Token {
 		}
 
 		token.Value = name
-		token.represenation = t.Representation()
+		token.representation = t.Representation()
 		return token
 	default:
 		r, _, err := t.ReadRune()
@@ -44,7 +44,7 @@ func TokenizeHashFromNumberSign(t *Tokenizer) Token {
 
 		return TokenDelim{
 			Value:         r,
-			represenation: t.Representation(),
+			representation: t.Representation(),
 		}
 	}
 }

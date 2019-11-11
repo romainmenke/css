@@ -2,7 +2,7 @@ package tokenizer
 
 type TokenComment struct {
 	Value         []rune
-	represenation []rune
+	representation []rune
 }
 
 func (t TokenComment) String() string {
@@ -10,5 +10,5 @@ func (t TokenComment) String() string {
 }
 
 func (t TokenComment) Representation() []rune {
-	return t.represenation
+	return t.representation
 }

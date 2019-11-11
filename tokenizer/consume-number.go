@@ -11,6 +11,7 @@ func ConsumeNumber(t *Tokenizer, initial rune) (interface{}, error) {
 	isNumber := false
 
 	if initial == '+' || initial == '-' {
+		t.ReadRune() // reconsume
 		t.tracking = append(t.tracking, initial)
 	}
 

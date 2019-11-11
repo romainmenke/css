@@ -30,7 +30,7 @@ func ConsumeComment(t *Tokenizer) Token {
 			if close == '/' {
 				return TokenComment{
 					Value:         t.tracking,
-					represenation: t.Representation(),
+					representation: t.Representation(),
 				}
 			}
 		}
