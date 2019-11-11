@@ -6,12 +6,12 @@ import (
 	"testing"
 )
 
-func TestTokenNumber_Int_OnlySelf(t *testing.T) {
+func TestTokenDimension_Int_OnlySelf(t *testing.T) {
 	sources := map[string]int64{
-		`+6`:    6,
-		`+1000`: 1000,
-		`-6`:    -6,
-		`-1000`: -1000,
+		`+6px`:     6,
+		`+1000rem`: 1000,
+		`-6em`:     -6,
+		`-1000vw`:  -1000,
 	}
 
 	for source, expected := range sources {
@@ -29,7 +29,7 @@ func TestTokenNumber_Int_OnlySelf(t *testing.T) {
 					t.Fatal(errToken)
 				}
 
-				if sToken, ok := token.(TokenNumber); !ok {
+				if sToken, ok := token.(TokenDimension); !ok {
 					t.Fatal(fmt.Sprintf("unexpected token of type : %T", token))
 				} else if sToken.IntValue() != expected {
 					t.Fatal(fmt.Sprintf("unexpected token int value : %d", sToken.IntValue()))
@@ -43,12 +43,12 @@ func TestTokenNumber_Int_OnlySelf(t *testing.T) {
 	}
 }
 
-func TestTokenNumber_Float_OnlySelf(t *testing.T) {
+func TestTokenDimension_Float_OnlySelf(t *testing.T) {
 	sources := map[string]float64{
-		`+6.123`:   6.123,
-		`+230.123`: 230.123,
-		`-6.123`:   -6.123,
-		`-230.123`: -230.123,
+		`+6.123px`:    6.123,
+		`+230.123rem`: 230.123,
+		`-6.123em`:    -6.123,
+		`-230.123vw`:  -230.123,
 	}
 
 	for source, expected := range sources {
@@ -66,7 +66,7 @@ func TestTokenNumber_Float_OnlySelf(t *testing.T) {
 					t.Fatal(errToken)
 				}
 
-				if sToken, ok := token.(TokenNumber); !ok {
+				if sToken, ok := token.(TokenDimension); !ok {
 					t.Fatal(fmt.Sprintf("unexpected token of type : %T", token))
 				} else if sToken.FloatValue() != expected {
 					t.Fatal(fmt.Sprintf("unexpected token float value : %f", sToken.FloatValue()))

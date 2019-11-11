@@ -6,12 +6,12 @@ import (
 	"testing"
 )
 
-func TestTokenNumber_Int_OnlySelf(t *testing.T) {
+func TestTokenPercentage_Int_OnlySelf(t *testing.T) {
 	sources := map[string]int64{
-		`+6`:    6,
-		`+1000`: 1000,
-		`-6`:    -6,
-		`-1000`: -1000,
+		`+6%`:    6,
+		`+1000%`: 1000,
+		`-6%`:    -6,
+		`-1000%`: -1000,
 	}
 
 	for source, expected := range sources {
@@ -29,7 +29,7 @@ func TestTokenNumber_Int_OnlySelf(t *testing.T) {
 					t.Fatal(errToken)
 				}
 
-				if sToken, ok := token.(TokenNumber); !ok {
+				if sToken, ok := token.(TokenPercentage); !ok {
 					t.Fatal(fmt.Sprintf("unexpected token of type : %T", token))
 				} else if sToken.IntValue() != expected {
 					t.Fatal(fmt.Sprintf("unexpected token int value : %d", sToken.IntValue()))
@@ -43,12 +43,12 @@ func TestTokenNumber_Int_OnlySelf(t *testing.T) {
 	}
 }
 
-func TestTokenNumber_Float_OnlySelf(t *testing.T) {
+func TestTokenPercentage_Float_OnlySelf(t *testing.T) {
 	sources := map[string]float64{
-		`+6.123`:   6.123,
-		`+230.123`: 230.123,
-		`-6.123`:   -6.123,
-		`-230.123`: -230.123,
+		`+6.123%`:   6.123,
+		`+230.123%`: 230.123,
+		`-6.123%`:   -6.123,
+		`-230.123%`: -230.123,
 	}
 
 	for source, expected := range sources {
@@ -66,7 +66,7 @@ func TestTokenNumber_Float_OnlySelf(t *testing.T) {
 					t.Fatal(errToken)
 				}
 
-				if sToken, ok := token.(TokenNumber); !ok {
+				if sToken, ok := token.(TokenPercentage); !ok {
 					t.Fatal(fmt.Sprintf("unexpected token of type : %T", token))
 				} else if sToken.FloatValue() != expected {
 					t.Fatal(fmt.Sprintf("unexpected token float value : %f", sToken.FloatValue()))

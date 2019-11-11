@@ -147,6 +147,7 @@ func parseNumber(t *Tokenizer, isNumber bool) (interface{}, error) {
 
 		return value, nil
 	}
+
 	value, err := strconv.ParseInt(string(t.tracking), 10, 64)
 	if err != nil {
 		return nil, err

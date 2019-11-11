@@ -24,7 +24,7 @@ func CheckIfTwoCodePointsAreAValidEscape(reader RuneReader) bool {
 
 func CheckIfThreeCodePointsWouldStartAnIdentifier(reader RuneReader) bool {
 	first, second, third, err := reader.PeekThreeRunes()
-	if err != nil {
+	if err != nil && err != io.EOF {
 		return false
 	}
 
@@ -40,6 +40,9 @@ func CheckIfThreeCodePointsWouldStartAnIdentifier(reader RuneReader) bool {
 		default:
 			return false
 		}
+
+	case unicode.In(first, NameStartCodePoint...):
+		return true
 
 	case first == '\u005c': // "\"
 		return second != '\u000a'

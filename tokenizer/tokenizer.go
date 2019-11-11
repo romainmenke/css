@@ -87,46 +87,12 @@ func (t *Tokenizer) Next() Token {
 			}
 
 			if CheckIfThreeCodePointsWouldStartANumber(t) {
-				v, err := ConsumeNumber(t, r)
-				if err == io.EOF {
-					return TokenEOF{}
-				}
-				if err != nil {
-					return TokenError{error: err}
-				}
-				if v == nil {
-					continue
-				}
+				return ConsumeNumeric(t, r)
+			}
 
-				switch vv := v.(type) {
-				case float64:
-					return TokenNumber{
-						floatValue:     vv,
-						intValue:       int64(vv),
-						Type:           NumberTypeNumber,
-						representation: t.Representation(),
-					}
-				case int64:
-					return TokenNumber{
-						floatValue:     float64(vv),
-						intValue:       vv,
-						Type:           NumberTypeInteger,
-						representation: t.Representation(),
-					}
-				case int:
-					return TokenNumber{
-						floatValue:     float64(vv),
-						intValue:       int64(vv),
-						Type:           NumberTypeInteger,
-						representation: t.Representation(),
-					}
-				}
-
-			} else {
-				return TokenDelim{
-					Value:         r,
-					represenation: t.Representation(),
-				}
+			return TokenDelim{
+				Value:         r,
+				represenation: t.Representation(),
 			}
 
 		case '-': // Minus
@@ -136,46 +102,12 @@ func (t *Tokenizer) Next() Token {
 			}
 
 			if CheckIfThreeCodePointsWouldStartANumber(t) {
-				v, err := ConsumeNumber(t, r)
-				if err == io.EOF {
-					return TokenEOF{}
-				}
-				if err != nil {
-					return TokenError{error: err}
-				}
-				if v == nil {
-					continue
-				}
+				return ConsumeNumeric(t, r)
+			}
 
-				switch vv := v.(type) {
-				case float64:
-					return TokenNumber{
-						floatValue:     vv,
-						intValue:       int64(vv),
-						Type:           NumberTypeNumber,
-						representation: t.Representation(),
-					}
-				case int64:
-					return TokenNumber{
-						floatValue:     float64(vv),
-						intValue:       vv,
-						Type:           NumberTypeInteger,
-						representation: t.Representation(),
-					}
-				case int:
-					return TokenNumber{
-						floatValue:     float64(vv),
-						intValue:       int64(vv),
-						Type:           NumberTypeInteger,
-						representation: t.Representation(),
-					}
-				}
-
-			} else {
-				return TokenDelim{
-					Value:         r,
-					represenation: t.Representation(),
-				}
+			return TokenDelim{
+				Value:         r,
+				represenation: t.Representation(),
 			}
 
 		case '\'', '"': // String

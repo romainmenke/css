@@ -33,7 +33,7 @@ func TestTokenHash_OnlySelf(t *testing.T) {
 					t.Fatal(fmt.Sprintf("unexpected token string : %s", hToken.String()))
 				} else if string(hToken.Representation()) != source {
 					t.Fatal(fmt.Sprintf("unexpected token representation : %s", string(hToken.Representation())))
-				} else if hToken.Type != HashTokenTypeUnrestricted {
+				} else if hToken.Type != HashTokenTypeID {
 					t.Fatal(fmt.Sprintf("unexpected token type : %v", hToken.Type))
 				} else {
 					sawToken = true
