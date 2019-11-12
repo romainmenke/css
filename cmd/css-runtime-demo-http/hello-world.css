@@ -1,0 +1,5 @@
+@context (http) {
+	response::body {
+		content: 'hello ' db('SELECT name FROM users ORDER BY rand LIMIT 1');
+	}
+}
