@@ -6,20 +6,20 @@ import (
 
 type RuneReader interface {
 	ReadRune() (rune, int, error)
-	PeekOneRune() (rune, error)
-	PeekTwoRunes() (rune, rune, error)
-	PeekThreeRunes() (rune, rune, rune, error)
+	peekOneRune() (rune, error)
+	peekTwoRunes() (rune, rune, error)
+	peekThreeRunes() (rune, rune, rune, error)
 }
 
 func (t *Tokenizer) ReadRune() (rune, int, error) {
 	return t.reader.ReadRune()
 }
 
-func (t *Tokenizer) Representation() []rune {
+func (t *Tokenizer) representation() []rune {
 	return t.reader.Representation()
 }
 
-func (t *Tokenizer) PeekOneRune() (rune, error) {
+func (t *Tokenizer) peekOneRune() (rune, error) {
 	runes, _, err := t.reader.PeekRunes(1)
 	if err != nil && err != io.EOF {
 		return 0, err
@@ -32,7 +32,7 @@ func (t *Tokenizer) PeekOneRune() (rune, error) {
 	return runes[0], nil
 }
 
-func (t *Tokenizer) PeekTwoRunes() (rune, rune, error) {
+func (t *Tokenizer) peekTwoRunes() (rune, rune, error) {
 	runes, _, err := t.reader.PeekRunes(2)
 	if err != nil && err != io.EOF {
 		return 0, 0, err
@@ -48,7 +48,7 @@ func (t *Tokenizer) PeekTwoRunes() (rune, rune, error) {
 	}
 }
 
-func (t *Tokenizer) PeekThreeRunes() (rune, rune, rune, error) {
+func (t *Tokenizer) peekThreeRunes() (rune, rune, rune, error) {
 	runes, _, err := t.reader.PeekRunes(3)
 	if err != nil && err != io.EOF {
 		return 0, 0, 0, err

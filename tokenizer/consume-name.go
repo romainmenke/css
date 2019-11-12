@@ -5,11 +5,11 @@ import (
 	"unicode"
 )
 
-func ConsumeName(t *Tokenizer) ([]rune, error) {
+func consumeName(t *Tokenizer) ([]rune, error) {
 	name := make([]rune, 0, 1000)
 
 	for {
-		if CheckIfTwoCodePointsAreAValidEscape(t) {
+		if checkIfTwoCodePointsAreAValidEscape(t) {
 			r, _, err := t.ReadRune()
 			if err == io.EOF {
 				return name, nil
@@ -27,7 +27,7 @@ func ConsumeName(t *Tokenizer) ([]rune, error) {
 			continue
 		}
 
-		peeked, err := t.PeekOneRune()
+		peeked, err := t.peekOneRune()
 		if err == io.EOF {
 			return name, nil
 		}

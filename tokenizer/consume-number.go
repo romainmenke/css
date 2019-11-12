@@ -6,7 +6,7 @@ import (
 	"unicode"
 )
 
-func ConsumeNumber(t *Tokenizer, initial rune) (interface{}, error) {
+func consumeNumber(t *Tokenizer, initial rune) (interface{}, error) {
 
 	isNumber := false
 
@@ -26,7 +26,7 @@ DIGITS_1:
 		switch {
 		case unicode.In(r, unicode.Digit):
 			t.tracking = append(t.tracking, r)
-			err = ConsumeDigits(t)
+			err = consumeDigits(t)
 			if err == io.EOF {
 				return parseNumber(t, isNumber)
 			}
@@ -38,7 +38,7 @@ DIGITS_1:
 		}
 	}
 
-	p1, p2, err := t.PeekTwoRunes()
+	p1, p2, err := t.peekTwoRunes()
 	if err == io.EOF {
 		return parseNumber(t, isNumber)
 	}
@@ -62,7 +62,7 @@ DIGITS_1:
 		}
 
 		{ // digits
-			err := ConsumeDigits(t)
+			err := consumeDigits(t)
 			if err == io.EOF {
 				return parseNumber(t, isNumber)
 			}
@@ -73,7 +73,7 @@ DIGITS_1:
 		}
 	}
 
-	p1, p2, p3, _ := t.PeekThreeRunes()
+	p1, p2, p3, _ := t.peekThreeRunes()
 	p1IsE := p1 == 'e' || p1 == 'E'
 	p2IsSign := p2 == '-' || p2 == '+'
 	p2IsDigit := unicode.In(p2, unicode.Digit)
@@ -106,7 +106,7 @@ DIGITS_1:
 		}
 
 		{ // digits
-			err := ConsumeDigits(t)
+			err := consumeDigits(t)
 			if err == io.EOF {
 				return parseNumber(t, isNumber)
 			}
@@ -119,9 +119,9 @@ DIGITS_1:
 	return parseNumber(t, isNumber)
 }
 
-func ConsumeDigits(t *Tokenizer) error {
+func consumeDigits(t *Tokenizer) error {
 	for {
-		peeked, err := t.PeekOneRune()
+		peeked, err := t.peekOneRune()
 		if err != nil {
 			return err
 		}

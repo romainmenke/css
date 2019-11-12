@@ -2,7 +2,7 @@ package tokenizer
 
 import "io"
 
-func ConsumeString(t *Tokenizer, currentQuoteToken rune) Token {
+func consumeString(t *Tokenizer, currentQuoteToken rune) Token {
 	quoteKind := SingleQuote
 	if currentQuoteToken == '"' {
 		quoteKind = DoubleQuote
@@ -14,7 +14,7 @@ func ConsumeString(t *Tokenizer, currentQuoteToken rune) Token {
 			if err == io.EOF {
 				return TokenString{
 					Value:          t.tracking,
-					representation: t.Representation(),
+					representation: t.representation(),
 					Quote:          quoteKind,
 				}
 			}
@@ -26,7 +26,7 @@ func ConsumeString(t *Tokenizer, currentQuoteToken rune) Token {
 		case currentQuoteToken:
 			return TokenString{
 				Value:          t.tracking,
-				representation: t.Representation(),
+				representation: t.representation(),
 				Quote:          quoteKind,
 			}
 
@@ -39,10 +39,10 @@ func ConsumeString(t *Tokenizer, currentQuoteToken rune) Token {
 				return TokenError{error: err}
 			}
 
-			if CheckIfNextIsEOF(t) {
+			if checkIfNextIsEOF(t) {
 				return TokenString{
 					Value:          t.tracking,
-					representation: t.Representation(),
+					representation: t.representation(),
 					Quote:          quoteKind,
 				}
 			}

@@ -38,47 +38,47 @@ func (t *Tokenizer) Next() Token {
 
 		case '(': // Left Parenthesis
 			return TokenParenthesisLeft{
-				representation: t.Representation(),
+				representation: t.representation(),
 			}
 
 		case ')': // Right Parenthesis
 			return TokenParenthesisRight{
-				representation: t.Representation(),
+				representation: t.representation(),
 			}
 
 		case '[': // Left Square Bracket
 			return TokenSquareBracketLeft{
-				representation: t.Representation(),
+				representation: t.representation(),
 			}
 
 		case ']': // Right Square Bracket
 			return TokenSquareBracketRight{
-				representation: t.Representation(),
+				representation: t.representation(),
 			}
 
 		case '{': // Left Curly Bracket
 			return TokenCurlyBracketLeft{
-				representation: t.Representation(),
+				representation: t.representation(),
 			}
 
 		case '}': // Right Curly Bracket
 			return TokenCurlyBracketRight{
-				representation: t.Representation(),
+				representation: t.representation(),
 			}
 
 		case ',': // Comma
 			return TokenComma{
-				representation: t.Representation(),
+				representation: t.representation(),
 			}
 
 		case ':': // Colon
 			return TokenColon{
-				representation: t.Representation(),
+				representation: t.representation(),
 			}
 
 		case ';': // Semicolon
 			return TokenSemicolon{
-				representation: t.Representation(),
+				representation: t.representation(),
 			}
 
 		case '+': // Plus
@@ -87,23 +87,23 @@ func (t *Tokenizer) Next() Token {
 				return TokenError{error: err}
 			}
 
-			if CheckIfThreeCodePointsWouldStartANumber(t) {
-				return ConsumeNumeric(t, r)
+			if checkIfThreeCodePointsWouldStartANumber(t) {
+				return consumeNumeric(t, r)
 			}
 
 			return TokenDelim{
 				Value:          r,
-				representation: t.Representation(),
+				representation: t.representation(),
 			}
 
 		case '-': // Minus
-			p1, p2, _ := t.PeekTwoRunes()
+			p1, p2, _ := t.peekTwoRunes()
 			if p1 == '-' && p2 == '>' {
 				t.ReadRune()
 				t.ReadRune()
 
 				return TokenCDC{
-					representation: t.Representation(),
+					representation: t.representation(),
 				}
 			}
 
@@ -112,27 +112,27 @@ func (t *Tokenizer) Next() Token {
 				return TokenError{error: err}
 			}
 
-			if CheckIfThreeCodePointsWouldStartANumber(t) {
-				return ConsumeNumeric(t, r)
+			if checkIfThreeCodePointsWouldStartANumber(t) {
+				return consumeNumeric(t, r)
 			}
 
-			if CheckIfThreeCodePointsWouldStartAnIdentifier(t) {
-				return ConsumeIdentLikeToken(t)
+			if checkIfThreeCodePointsWouldStartAnIdentifier(t) {
+				return consumeIdentLikeToken(t)
 			}
 
 			return TokenDelim{
 				Value:          r,
-				representation: t.Representation(),
+				representation: t.representation(),
 			}
 
 		case '\'', '"': // String
-			return ConsumeString(t, r)
+			return consumeString(t, r)
 
 		case '\u000a', '\u0009', '\u0020': // Whitespace
-			return ConsumeWhiteSpace(t, -1)
+			return consumeWhiteSpace(t, -1)
 
 		case '/': // Comment
-			token := ConsumeComment(t)
+			token := consumeComment(t)
 			if token != nil {
 				// Should return nothing
 				// https://drafts.csswg.org/css-syntax-3/#consume-comment
@@ -141,21 +141,21 @@ func (t *Tokenizer) Next() Token {
 			}
 
 		case '@': // Comment
-			if CheckIfThreeCodePointsWouldStartAnIdentifier(t) {
-				name, err := ConsumeName(t)
+			if checkIfThreeCodePointsWouldStartAnIdentifier(t) {
+				name, err := consumeName(t)
 				if err != nil {
 					return TokenError{error: err}
 				}
 
 				return TokenAtKeyword{
 					Value:          name,
-					representation: t.Representation(),
+					representation: t.representation(),
 				}
 			}
 
 			return TokenDelim{
 				Value:          r,
-				representation: t.Representation(),
+				representation: t.representation(),
 			}
 		case '#': // Number Sign
 			return TokenizeHashFromNumberSign(t)
@@ -167,8 +167,8 @@ func (t *Tokenizer) Next() Token {
 				return TokenError{error: err}
 			}
 
-			if CheckIfThreeCodePointsWouldStartANumber(t) {
-				return ConsumeNumeric(t, r)
+			if checkIfThreeCodePointsWouldStartANumber(t) {
+				return consumeNumeric(t, r)
 			}
 		}
 
@@ -178,12 +178,12 @@ func (t *Tokenizer) Next() Token {
 				return TokenError{error: err}
 			}
 
-			return ConsumeIdentLikeToken(t)
+			return consumeIdentLikeToken(t)
 		}
 
 		return TokenDelim{
 			Value:          r,
-			representation: t.Representation(),
+			representation: t.representation(),
 		}
 	}
 }
