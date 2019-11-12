@@ -57,6 +57,11 @@ func (s *Server) Run() {
 		if err != nil {
 			log.Println(err)
 		}
+
+		err := s.runtime.Close()
+		if err != nil {
+			log.Println(err)
+		}
 	}()
 
 	err := server.ListenAndServe()
