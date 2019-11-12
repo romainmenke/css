@@ -58,7 +58,7 @@ func (s *Server) Run() {
 			log.Println(err)
 		}
 
-		err := s.runtime.Close()
+		err = s.runtime.Close()
 		if err != nil {
 			log.Println(err)
 		}
