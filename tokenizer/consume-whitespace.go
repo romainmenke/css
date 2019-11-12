@@ -2,8 +2,18 @@ package tokenizer
 
 import "io"
 
-func ConsumeWhiteSpace(t *Tokenizer) Token {
+func ConsumeWhiteSpace(t *Tokenizer, max int) Token {
+	current := 0
+
 	for {
+		if max != -1 && current > 0 && current == max {
+			return TokenWhitespace{
+				representation: t.Representation(),
+			}
+		}
+
+		current++
+
 		peeked, err := t.PeekOneRune()
 		if err == io.EOF {
 			return TokenWhitespace{

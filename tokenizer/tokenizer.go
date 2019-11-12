@@ -117,7 +117,7 @@ func (t *Tokenizer) Next() Token {
 			}
 
 			if CheckIfThreeCodePointsWouldStartAnIdentifier(t) {
-				// Consume Ident Like Token
+				return ConsumeIdentLikeToken(t)
 			}
 
 			return TokenDelim{
@@ -129,7 +129,7 @@ func (t *Tokenizer) Next() Token {
 			return ConsumeString(t, r)
 
 		case '\u000a', '\u0009', '\u0020': // Whitespace
-			return ConsumeWhiteSpace(t)
+			return ConsumeWhiteSpace(t, -1)
 
 		case '/': // Comment
 			token := ConsumeComment(t)
@@ -170,6 +170,15 @@ func (t *Tokenizer) Next() Token {
 			if CheckIfThreeCodePointsWouldStartANumber(t) {
 				return ConsumeNumeric(t, r)
 			}
+		}
+
+		if unicode.In(r, NameStartCodePoint...) {
+			err := t.reader.UnreadRune(r, size)
+			if err != nil {
+				return TokenError{error: err}
+			}
+
+			return ConsumeIdentLikeToken(t)
 		}
 
 		return TokenDelim{
