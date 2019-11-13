@@ -1,33 +1,17 @@
 package parser
 
 import (
-	"fmt"
 	"io"
 
-	"github.com/romainmenke/css/stylesheet"
 	"github.com/romainmenke/css/tokenizer"
 )
 
-func Parse(r io.Reader) (stylesheet.Stylesheet, error) {
-	tz := tokenizer.New(r)
+type Parser struct {
+	tz *tokenizer.Tokenizer
+}
 
-	for {
-		t := tz.Next()
-		if _, ok := t.(tokenizer.TokenEOF); ok || t == nil {
-			return stylesheet.Stylesheet{}, nil
-		}
-
-		switch token := t.(type) {
-		case tokenizer.TokenWhitespace:
-			continue
-		case tokenizer.TokenAtKeyword:
-			continue
-		default:
-			fmt.Println(token)
-		}
-
-		break
+func New(r io.Reader) *Parser {
+	return &Parser{
+		tz: tokenizer.New(r),
 	}
-
-	return stylesheet.Stylesheet{}, nil
 }
