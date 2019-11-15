@@ -1,8 +1,8 @@
 package tokenizer
 
 type TokenHash struct {
-	Type          HashTokenType
-	Value         []rune
+	Type           HashTokenType
+	Value          []rune
 	representation []rune
 }
 
@@ -43,7 +43,7 @@ func TokenizeHashFromNumberSign(t *Tokenizer) Token {
 		}
 
 		return TokenDelim{
-			Value:         r,
+			Value:          r,
 			representation: t.representation(),
 		}
 	}

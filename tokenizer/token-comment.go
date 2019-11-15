@@ -1,7 +1,7 @@
 package tokenizer
 
 type TokenComment struct {
-	Value         []rune
+	Value          []rune
 	representation []rune
 }
 

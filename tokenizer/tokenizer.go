@@ -91,6 +91,8 @@ func (t *Tokenizer) Next() Token {
 				return consumeNumeric(t, r)
 			}
 
+			t.ReadRune()
+
 			return TokenDelim{
 				Value:          r,
 				representation: t.representation(),

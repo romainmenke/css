@@ -5,13 +5,13 @@ import (
 	"github.com/romainmenke/css/tokenizer"
 )
 
-func consumeAtRule(p *Parser, inputToken tokenizer.Token) stylesheet.Rule {
+func consumeAtRule(s tokenStream, inputToken tokenizer.Token) interface{} {
 	rule := stylesheet.AtRule{
 		Name: inputToken.String(),
 	}
 
 	for {
-		t := p.tz.Next()
+		t := s.Next()
 		if t == nil {
 			return rule
 		}
@@ -22,19 +22,19 @@ func consumeAtRule(p *Parser, inputToken tokenizer.Token) stylesheet.Rule {
 		case tokenizer.TokenEOF:
 			return rule
 		case tokenizer.TokenCurlyBracketLeft:
-			rule.Block = consumeSimpleBlock(p, token)
+			rule.Block = consumeSimpleBlock(s, token)
 			return rule
 		default:
-			rule.Prelude = append(rule.Prelude, consumeComponentValue(p, token))
+			rule.Prelude = append(rule.Prelude, consumeComponentValue(s, token))
 		}
 	}
 }
 
-func consumeQualifiedRule(p *Parser, inputToken tokenizer.Token) stylesheet.Rule {
+func consumeQualifiedRule(s tokenStream, inputToken tokenizer.Token) stylesheet.Rule {
 	rule := stylesheet.QualifiedRule{}
 
 	for {
-		t := p.tz.Next()
+		t := s.Next()
 		if t == nil {
 			return rule
 		}
@@ -43,12 +43,12 @@ func consumeQualifiedRule(p *Parser, inputToken tokenizer.Token) stylesheet.Rule
 		case tokenizer.TokenSemicolon:
 			return rule
 		case tokenizer.TokenEOF:
-			return nil
+			return rule
 		case tokenizer.TokenCurlyBracketLeft:
-			rule.Block = consumeSimpleBlock(p, token)
+			rule.Block = consumeSimpleBlock(s, token)
 			return rule
 		default:
-			rule.Prelude = append(rule.Prelude, consumeComponentValue(p, token))
+			rule.Prelude = append(rule.Prelude, consumeComponentValue(s, token))
 		}
 	}
 }

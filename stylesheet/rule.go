@@ -7,27 +7,21 @@ type Rule interface {
 type AtRule struct {
 	Block   Block
 	Name    string
-	Prelude []ComponentValue
+	Prelude []interface{}
 }
 
 func (t AtRule) String() string {
 	return ""
 }
 
-func (t AtRule) Representation() []rune {
-	return []rune{}
-}
-
 // QualifiedRule has a prelude consisting of a list of component values, and a block consisting of a simple {} block.
 type QualifiedRule struct {
 	Block   Block
-	Prelude []ComponentValue
+	Prelude []interface{}
 }
 
 func (t QualifiedRule) String() string {
 	return ""
 }
 
-func (t QualifiedRule) Representation() []rune {
-	return []rune{}
-}
+type RuleList []interface{}

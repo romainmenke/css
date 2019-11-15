@@ -5,13 +5,13 @@ import (
 	"github.com/romainmenke/css/tokenizer"
 )
 
-func consumeFunction(p *Parser, inputToken tokenizer.Token) stylesheet.Function {
+func consumeFunction(s tokenStream, reconsumed tokenizer.Token) interface{} {
 	function := stylesheet.Function{
-		Name: inputToken.String(),
+		Name: reconsumed.String(),
 	}
 
 	for {
-		t := p.tz.Next()
+		t := s.Next()
 		if t == nil {
 			return function
 		}
@@ -22,7 +22,7 @@ func consumeFunction(p *Parser, inputToken tokenizer.Token) stylesheet.Function 
 		case tokenizer.TokenEOF:
 			return function
 		default:
-			function.Value = append(function.Value, consumeComponentValue(p, token))
+			function.Value = append(function.Value, consumeComponentValue(s, token))
 		}
 	}
 }

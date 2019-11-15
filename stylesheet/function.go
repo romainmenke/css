@@ -3,13 +3,9 @@ package stylesheet
 // Function has a name and a value consisting of a list of component values.
 type Function struct {
 	Name  string
-	Value []ComponentValue
+	Value []interface{}
 }
 
 func (t Function) String() string {
 	return ""
-}
-
-func (t Function) Representation() []rune {
-	return []rune{}
 }

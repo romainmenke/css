@@ -5,34 +5,28 @@ import (
 	"github.com/romainmenke/css/tokenizer"
 )
 
-func consumeSimpleBlock(p *Parser, inputToken tokenizer.Token) stylesheet.SimpleBlock {
+func consumeSimpleBlock(s tokenStream, associatedToken tokenizer.Token) interface{} {
 	simpleBlock := stylesheet.SimpleBlock{
-		AssociatedToken: inputToken,
+		AssociatedToken: associatedToken,
 	}
 
 	for {
-		t := p.tz.Next()
+		t := s.Next()
 		if t == nil {
 			return simpleBlock
 		}
 
 		switch token := t.(type) {
-		case tokenizer.TokenCurlyBracketRight:
-			if token.IsMirror(inputToken) {
+		case tokenizer.MirroreableToken:
+			if token.IsMirror(associatedToken) {
 				return simpleBlock
 			}
-		case tokenizer.TokenSquareBracketRight:
-			if token.IsMirror(inputToken) {
-				return simpleBlock
-			}
-		case tokenizer.TokenParenthesisRight:
-			if token.IsMirror(inputToken) {
-				return simpleBlock
-			}
+
+			simpleBlock.Value = append(simpleBlock.Value, consumeComponentValue(s, token))
 		case tokenizer.TokenEOF:
 			return simpleBlock
 		default:
-			simpleBlock.Value = append(simpleBlock.Value, consumeComponentValue(p, token))
+			simpleBlock.Value = append(simpleBlock.Value, consumeComponentValue(s, token))
 		}
 	}
 }
