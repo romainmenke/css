@@ -5,8 +5,8 @@ import (
 	"unicode"
 )
 
-func CheckIfTwoCodePointsAreAValidEscape(reader RuneReader) bool {
-	first, second, err := reader.PeekTwoRunes()
+func checkIfTwoCodePointsAreAValidEscape(reader RuneReader) bool {
+	first, second, err := reader.peekTwoRunes()
 	if err != nil {
 		return false
 	}
@@ -22,8 +22,8 @@ func CheckIfTwoCodePointsAreAValidEscape(reader RuneReader) bool {
 	return true
 }
 
-func CheckIfThreeCodePointsWouldStartAnIdentifier(reader RuneReader) bool {
-	first, second, third, err := reader.PeekThreeRunes()
+func checkIfThreeCodePointsWouldStartAnIdentifier(reader RuneReader) bool {
+	first, second, third, err := reader.peekThreeRunes()
 	if err != nil && err != io.EOF {
 		return false
 	}
@@ -51,8 +51,8 @@ func CheckIfThreeCodePointsWouldStartAnIdentifier(reader RuneReader) bool {
 	}
 }
 
-func CheckIfThreeCodePointsWouldStartANumber(reader RuneReader) bool {
-	first, second, third, err := reader.PeekThreeRunes()
+func checkIfThreeCodePointsWouldStartANumber(reader RuneReader) bool {
+	first, second, third, err := reader.peekThreeRunes()
 	if err != nil && err != io.EOF {
 		return false
 	}
@@ -76,8 +76,8 @@ func CheckIfThreeCodePointsWouldStartANumber(reader RuneReader) bool {
 	}
 }
 
-func CheckIfNextIsEOF(reader RuneReader) bool {
-	_, err := reader.PeekOneRune()
+func checkIfNextIsEOF(reader RuneReader) bool {
+	_, err := reader.peekOneRune()
 	if err == io.EOF {
 		return true
 	}
@@ -88,8 +88,8 @@ func CheckIfNextIsEOF(reader RuneReader) bool {
 	return false
 }
 
-func CheckIfFirstCodePointIsInRangeTable(reader RuneReader, rt ...*unicode.RangeTable) bool {
-	first, err := reader.PeekOneRune()
+func checkIfFirstCodePointIsInRangeTable(reader RuneReader, rt ...*unicode.RangeTable) bool {
+	first, err := reader.peekOneRune()
 	if err != nil {
 		return false
 	}

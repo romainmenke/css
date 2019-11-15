@@ -5,17 +5,17 @@ import (
 	"strings"
 )
 
-func ConsumeIdentLikeToken(t *Tokenizer) Token {
-	name, err := ConsumeName(t)
+func consumeIdentLikeToken(t *Tokenizer) Token {
+	name, err := consumeName(t)
 	if err != nil {
 		return TokenError{error: err}
 	}
 
-	p1, err := t.PeekOneRune()
+	p1, err := t.peekOneRune()
 	if err == io.EOF {
 		return TokenIdent{
 			Value:          name,
-			representation: t.Representation(),
+			representation: t.representation(),
 		}
 	}
 	if err != nil {
@@ -28,13 +28,13 @@ func ConsumeIdentLikeToken(t *Tokenizer) Token {
 			return TokenError{error: err}
 		}
 
-		ConsumeWhiteSpace(t, 2)
+		consumeWhiteSpace(t, 2)
 
-		p2, err := t.PeekOneRune()
+		p2, err := t.peekOneRune()
 		if err == io.EOF {
 			return TokenIdent{
 				Value:          name,
-				representation: t.Representation(),
+				representation: t.representation(),
 			}
 		}
 		if err != nil {
@@ -49,11 +49,11 @@ func ConsumeIdentLikeToken(t *Tokenizer) Token {
 
 			return TokenFunction{
 				Value:          name,
-				representation: t.Representation(),
+				representation: t.representation(),
 			}
 		}
 
-		return ConsumeURLToken(t)
+		return consumeURLToken(t)
 	}
 
 	if p1 == '(' {
@@ -64,12 +64,12 @@ func ConsumeIdentLikeToken(t *Tokenizer) Token {
 
 		return TokenFunction{
 			Value:          name,
-			representation: t.Representation(),
+			representation: t.representation(),
 		}
 	}
 
 	return TokenIdent{
 		Value:          name,
-		representation: t.Representation(),
+		representation: t.representation(),
 	}
 }

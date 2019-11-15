@@ -11,3 +11,12 @@ func (t TokenParenthesisRight) String() string {
 func (t TokenParenthesisRight) Representation() []rune {
 	return t.representation
 }
+
+func (t TokenParenthesisRight) IsMirror(m Token) bool {
+	switch m.(type) {
+	case TokenParenthesisLeft:
+		return true
+	default:
+		return false
+	}
+}

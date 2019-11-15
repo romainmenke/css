@@ -1,7 +1,7 @@
 package tokenizer
 
 type TokenDelim struct {
-	Value         rune
+	Value          rune
 	representation []rune
 }
 

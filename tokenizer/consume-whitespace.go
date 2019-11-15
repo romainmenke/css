@@ -2,22 +2,22 @@ package tokenizer
 
 import "io"
 
-func ConsumeWhiteSpace(t *Tokenizer, max int) Token {
+func consumeWhiteSpace(t *Tokenizer, max int) Token {
 	current := 0
 
 	for {
 		if max != -1 && current > 0 && current == max {
 			return TokenWhitespace{
-				representation: t.Representation(),
+				representation: t.representation(),
 			}
 		}
 
 		current++
 
-		peeked, err := t.PeekOneRune()
+		peeked, err := t.peekOneRune()
 		if err == io.EOF {
 			return TokenWhitespace{
-				representation: t.Representation(),
+				representation: t.representation(),
 			}
 		}
 		if err != nil {
@@ -35,6 +35,6 @@ func ConsumeWhiteSpace(t *Tokenizer, max int) Token {
 	}
 
 	return TokenWhitespace{
-		representation: t.Representation(),
+		representation: t.representation(),
 	}
 }
