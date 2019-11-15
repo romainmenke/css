@@ -36,18 +36,6 @@ func (p *Peeker) ResetRepresentation() {
 	}
 }
 
-func (p *Peeker) buffRunes() {
-	for len(p.peekBuffer) < 12 {
-		r, size, _ := p.reader.ReadRune()
-		if size == 0 {
-			break
-		}
-
-		p.peekBuffer = append(p.peekBuffer, r)
-		p.peekSizes = append(p.peekSizes, size)
-	}
-}
-
 func (p *Peeker) readRune() (rune, int, error) {
 	var (
 		r    rune

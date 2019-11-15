@@ -4,7 +4,7 @@ import (
 	"io"
 )
 
-func ConsumeBadURLToken(t *Tokenizer) Token {
+func consumeBadURLToken(t *Tokenizer) Token {
 	for {
 		r, _, err := t.ReadRune()
 		if err == io.EOF {

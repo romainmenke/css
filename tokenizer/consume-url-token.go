@@ -4,8 +4,8 @@ import (
 	"io"
 )
 
-func ConsumeURLToken(t *Tokenizer) Token {
-	ConsumeWhiteSpace(t, -1)
+func consumeURLToken(t *Tokenizer) Token {
+	consumeWhiteSpace(t, -1)
 	t.tracking = t.tracking[:0]
 
 	for {
@@ -21,12 +21,12 @@ func ConsumeURLToken(t *Tokenizer) Token {
 		switch r {
 
 		case '(', '\'', '"':
-			return ConsumeBadURLToken(t)
+			return consumeBadURLToken(t)
 
 		case '\\':
 			unescapedR, err := Unescape(t, r)
 			if err != nil {
-				return ConsumeBadURLToken(t)
+				return consumeBadURLToken(t)
 			}
 
 			t.tracking = append(t.tracking, unescapedR)
@@ -34,11 +34,11 @@ func ConsumeURLToken(t *Tokenizer) Token {
 		case ')': // Right Parenthesis
 			return TokenUrl{
 				Value:          t.tracking,
-				representation: t.Representation(),
+				representation: t.representation(),
 			}
 
 		case '\u000a', '\u0009', '\u0020': // Whitespace
-			ConsumeWhiteSpace(t, -1)
+			consumeWhiteSpace(t, -1)
 
 		default:
 			t.tracking = append(t.tracking, r)

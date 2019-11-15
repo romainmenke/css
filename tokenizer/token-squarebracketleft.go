@@ -11,3 +11,12 @@ func (t TokenSquareBracketLeft) String() string {
 func (t TokenSquareBracketLeft) Representation() []rune {
 	return t.representation
 }
+
+func (t TokenSquareBracketLeft) IsMirror(m Token) bool {
+	switch m.(type) {
+	case TokenSquareBracketRight:
+		return true
+	default:
+		return false
+	}
+}

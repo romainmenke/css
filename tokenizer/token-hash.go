@@ -1,8 +1,8 @@
 package tokenizer
 
 type TokenHash struct {
-	Type          HashTokenType
-	Value         []rune
+	Type           HashTokenType
+	Value          []rune
 	representation []rune
 }
 
@@ -22,19 +22,19 @@ const HashTokenTypeID HashTokenType = 1
 
 func TokenizeHashFromNumberSign(t *Tokenizer) Token {
 	switch {
-	case CheckIfFirstCodePointIsInRangeTable(t, NameCodePoint...) || CheckIfTwoCodePointsAreAValidEscape(t):
+	case checkIfFirstCodePointIsInRangeTable(t, NameCodePoint...) || checkIfTwoCodePointsAreAValidEscape(t):
 		token := TokenHash{}
-		if CheckIfThreeCodePointsWouldStartAnIdentifier(t) {
+		if checkIfThreeCodePointsWouldStartAnIdentifier(t) {
 			token.Type = HashTokenTypeID
 		}
 
-		name, err := ConsumeName(t)
+		name, err := consumeName(t)
 		if err != nil {
 			return TokenError{error: err}
 		}
 
 		token.Value = name
-		token.representation = t.Representation()
+		token.representation = t.representation()
 		return token
 	default:
 		r, _, err := t.ReadRune()
@@ -43,8 +43,8 @@ func TokenizeHashFromNumberSign(t *Tokenizer) Token {
 		}
 
 		return TokenDelim{
-			Value:         r,
-			representation: t.Representation(),
+			Value:          r,
+			representation: t.representation(),
 		}
 	}
 }
