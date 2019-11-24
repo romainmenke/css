@@ -33,8 +33,8 @@ func consumeURLToken(t *Tokenizer) Token {
 
 		case ')': // Right Parenthesis
 			return TokenUrl{
-				Value:          t.tracking,
-				representation: t.representation(),
+				Value:          append([]rune(nil), t.tracking...),
+				representation: append([]rune(nil), t.representation()...),
 			}
 
 		case '\u000a', '\u0009', '\u0020': // Whitespace

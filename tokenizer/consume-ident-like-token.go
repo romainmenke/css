@@ -14,8 +14,8 @@ func consumeIdentLikeToken(t *Tokenizer) Token {
 	p1, err := t.peekOneRune()
 	if err == io.EOF {
 		return TokenIdent{
-			Value:          name,
-			representation: t.representation(),
+			Value:          append([]rune(nil), name...),
+			representation: append([]rune(nil), t.representation()...),
 		}
 	}
 	if err != nil {
@@ -33,8 +33,8 @@ func consumeIdentLikeToken(t *Tokenizer) Token {
 		p2, err := t.peekOneRune()
 		if err == io.EOF {
 			return TokenIdent{
-				Value:          name,
-				representation: t.representation(),
+				Value:          append([]rune(nil), name...),
+				representation: append([]rune(nil), t.representation()...),
 			}
 		}
 		if err != nil {
@@ -48,8 +48,8 @@ func consumeIdentLikeToken(t *Tokenizer) Token {
 			}
 
 			return TokenFunction{
-				Value:          name,
-				representation: t.representation(),
+				Value:          append([]rune(nil), name...),
+				representation: append([]rune(nil), t.representation()...),
 			}
 		}
 
@@ -63,13 +63,13 @@ func consumeIdentLikeToken(t *Tokenizer) Token {
 		}
 
 		return TokenFunction{
-			Value:          name,
-			representation: t.representation(),
+			Value:          append([]rune(nil), name...),
+			representation: append([]rune(nil), t.representation()...),
 		}
 	}
 
 	return TokenIdent{
-		Value:          name,
-		representation: t.representation(),
+		Value:          append([]rune(nil), name...),
+		representation: append([]rune(nil), t.representation()...),
 	}
 }

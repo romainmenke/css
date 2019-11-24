@@ -13,8 +13,8 @@ func consumeString(t *Tokenizer, currentQuoteToken rune) Token {
 		if err != nil {
 			if err == io.EOF {
 				return TokenString{
-					Value:          t.tracking,
-					representation: t.representation(),
+					Value:          append([]rune(nil), t.tracking...),
+					representation: append([]rune(nil), t.representation()...),
 					Quote:          quoteKind,
 				}
 			}
@@ -25,8 +25,8 @@ func consumeString(t *Tokenizer, currentQuoteToken rune) Token {
 		switch r {
 		case currentQuoteToken:
 			return TokenString{
-				Value:          t.tracking,
-				representation: t.representation(),
+				Value:          append([]rune(nil), t.tracking...),
+				representation: append([]rune(nil), t.representation()...),
 				Quote:          quoteKind,
 			}
 
@@ -41,8 +41,8 @@ func consumeString(t *Tokenizer, currentQuoteToken rune) Token {
 
 			if checkIfNextIsEOF(t) {
 				return TokenString{
-					Value:          t.tracking,
-					representation: t.representation(),
+					Value:          append([]rune(nil), t.tracking...),
+					representation: append([]rune(nil), t.representation()...),
 					Quote:          quoteKind,
 				}
 			}

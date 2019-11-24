@@ -25,9 +25,9 @@ func NewTokenDimensionInt(v int, unit []rune, representation []rune) TokenDimens
 			floatValue:     float64(v),
 			intValue:       int64(v),
 			Type:           NumberTypeInteger,
-			representation: representation,
+			representation: append([]rune(nil), representation...),
 		},
-		Unit: unit,
+		Unit: append([]rune(nil), unit...),
 	}
 }
 
@@ -37,9 +37,9 @@ func NewTokenDimensionInt64(v int64, unit []rune, representation []rune) TokenDi
 			floatValue:     float64(v),
 			intValue:       v,
 			Type:           NumberTypeInteger,
-			representation: representation,
+			representation: append([]rune(nil), representation...),
 		},
-		Unit: unit,
+		Unit: append([]rune(nil), unit...),
 	}
 }
 
@@ -49,8 +49,8 @@ func NewTokenDimensionFloat64(v float64, unit []rune, representation []rune) Tok
 			floatValue:     v,
 			intValue:       int64(v),
 			Type:           NumberTypeInteger,
-			representation: representation,
+			representation: append([]rune(nil), representation...),
 		},
-		Unit: unit,
+		Unit: append([]rune(nil), unit...),
 	}
 }

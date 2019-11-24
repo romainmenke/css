@@ -29,8 +29,8 @@ func consumeComment(t *Tokenizer) Token {
 
 			if close == '/' {
 				return TokenComment{
-					Value:          t.tracking,
-					representation: t.representation(),
+					Value:          append([]rune(nil), t.tracking...),
+					representation: append([]rune(nil), t.representation()...),
 				}
 			}
 		}

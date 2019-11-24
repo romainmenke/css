@@ -8,7 +8,7 @@ func consumeWhiteSpace(t *Tokenizer, max int) Token {
 	for {
 		if max != -1 && current > 0 && current == max {
 			return TokenWhitespace{
-				representation: t.representation(),
+				representation: append([]rune(nil), t.representation()...),
 			}
 		}
 
@@ -17,7 +17,7 @@ func consumeWhiteSpace(t *Tokenizer, max int) Token {
 		peeked, err := t.peekOneRune()
 		if err == io.EOF {
 			return TokenWhitespace{
-				representation: t.representation(),
+				representation: append([]rune(nil), t.representation()...),
 			}
 		}
 		if err != nil {
@@ -35,6 +35,6 @@ func consumeWhiteSpace(t *Tokenizer, max int) Token {
 	}
 
 	return TokenWhitespace{
-		representation: t.representation(),
+		representation: append([]rune(nil), t.representation()...),
 	}
 }

@@ -23,7 +23,7 @@ func NewTokenPercentageInt(v int, representation []rune) TokenPercentage {
 			floatValue:     float64(v),
 			intValue:       int64(v),
 			Type:           NumberTypeInteger,
-			representation: representation,
+			representation: append([]rune(nil), representation...),
 		},
 	}
 }
@@ -34,7 +34,7 @@ func NewTokenPercentageInt64(v int64, representation []rune) TokenPercentage {
 			floatValue:     float64(v),
 			intValue:       v,
 			Type:           NumberTypeInteger,
-			representation: representation,
+			representation: append([]rune(nil), representation...),
 		},
 	}
 }
@@ -45,7 +45,7 @@ func NewTokenPercentageFloat64(v float64, representation []rune) TokenPercentage
 			floatValue:     v,
 			intValue:       int64(v),
 			Type:           NumberTypeInteger,
-			representation: representation,
+			representation: append([]rune(nil), representation...),
 		},
 	}
 }

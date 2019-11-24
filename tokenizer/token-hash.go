@@ -33,8 +33,8 @@ func TokenizeHashFromNumberSign(t *Tokenizer) Token {
 			return TokenError{error: err}
 		}
 
-		token.Value = name
-		token.representation = t.representation()
+		token.Value = append([]rune(nil), name...)
+		token.representation = append([]rune(nil), t.representation()...)
 		return token
 	default:
 		r, _, err := t.ReadRune()
@@ -44,7 +44,7 @@ func TokenizeHashFromNumberSign(t *Tokenizer) Token {
 
 		return TokenDelim{
 			Value:          r,
-			representation: t.representation(),
+			representation: append([]rune(nil), t.representation()...),
 		}
 	}
 }

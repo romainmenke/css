@@ -33,7 +33,7 @@ func NewTokenNumberInt(v int, representation []rune) TokenNumber {
 		floatValue:     float64(v),
 		intValue:       int64(v),
 		Type:           NumberTypeInteger,
-		representation: representation,
+		representation: append([]rune(nil), representation...),
 	}
 }
 
@@ -42,7 +42,7 @@ func NewTokenNumberInt64(v int64, representation []rune) TokenNumber {
 		floatValue:     float64(v),
 		intValue:       v,
 		Type:           NumberTypeInteger,
-		representation: representation,
+		representation: append([]rune(nil), representation...),
 	}
 }
 
@@ -51,6 +51,6 @@ func NewTokenNumberFloat64(v float64, representation []rune) TokenNumber {
 		floatValue:     v,
 		intValue:       int64(v),
 		Type:           NumberTypeInteger,
-		representation: representation,
+		representation: append([]rune(nil), representation...),
 	}
 }

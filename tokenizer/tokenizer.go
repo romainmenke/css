@@ -38,47 +38,47 @@ func (t *Tokenizer) Next() Token {
 
 		case '(': // Left Parenthesis
 			return TokenParenthesisLeft{
-				representation: t.representation(),
+				representation: append([]rune(nil), t.representation()...),
 			}
 
 		case ')': // Right Parenthesis
 			return TokenParenthesisRight{
-				representation: t.representation(),
+				representation: append([]rune(nil), t.representation()...),
 			}
 
 		case '[': // Left Square Bracket
 			return TokenSquareBracketLeft{
-				representation: t.representation(),
+				representation: append([]rune(nil), t.representation()...),
 			}
 
 		case ']': // Right Square Bracket
 			return TokenSquareBracketRight{
-				representation: t.representation(),
+				representation: append([]rune(nil), t.representation()...),
 			}
 
 		case '{': // Left Curly Bracket
 			return TokenCurlyBracketLeft{
-				representation: t.representation(),
+				representation: append([]rune(nil), t.representation()...),
 			}
 
 		case '}': // Right Curly Bracket
 			return TokenCurlyBracketRight{
-				representation: t.representation(),
+				representation: append([]rune(nil), t.representation()...),
 			}
 
 		case ',': // Comma
 			return TokenComma{
-				representation: t.representation(),
+				representation: append([]rune(nil), t.representation()...),
 			}
 
 		case ':': // Colon
 			return TokenColon{
-				representation: t.representation(),
+				representation: append([]rune(nil), t.representation()...),
 			}
 
 		case ';': // Semicolon
 			return TokenSemicolon{
-				representation: t.representation(),
+				representation: append([]rune(nil), t.representation()...),
 			}
 
 		case '+': // Plus
@@ -95,7 +95,7 @@ func (t *Tokenizer) Next() Token {
 
 			return TokenDelim{
 				Value:          r,
-				representation: t.representation(),
+				representation: append([]rune(nil), t.representation()...),
 			}
 
 		case '-': // Minus
@@ -105,7 +105,7 @@ func (t *Tokenizer) Next() Token {
 				t.ReadRune()
 
 				return TokenCDC{
-					representation: t.representation(),
+					representation: append([]rune(nil), t.representation()...),
 				}
 			}
 
@@ -124,7 +124,7 @@ func (t *Tokenizer) Next() Token {
 
 			return TokenDelim{
 				Value:          r,
-				representation: t.representation(),
+				representation: append([]rune(nil), t.representation()...),
 			}
 
 		case '\'', '"': // String
@@ -150,14 +150,14 @@ func (t *Tokenizer) Next() Token {
 				}
 
 				return TokenAtKeyword{
-					Value:          name,
-					representation: t.representation(),
+					Value:          append([]rune(nil), name...),
+					representation: append([]rune(nil), t.representation()...),
 				}
 			}
 
 			return TokenDelim{
 				Value:          r,
-				representation: t.representation(),
+				representation: append([]rune(nil), t.representation()...),
 			}
 		case '#': // Number Sign
 			return TokenizeHashFromNumberSign(t)
@@ -185,7 +185,7 @@ func (t *Tokenizer) Next() Token {
 
 		return TokenDelim{
 			Value:          r,
-			representation: t.representation(),
+			representation: append([]rune(nil), t.representation()...),
 		}
 	}
 }
