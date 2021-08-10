@@ -142,7 +142,7 @@ func (t *Tokenizer) Next() Token {
 				return token
 			}
 
-		case '@': // Comment
+		case '@': // At Rule
 			if checkIfThreeCodePointsWouldStartAnIdentifier(t) {
 				name, err := consumeName(t)
 				if err != nil {

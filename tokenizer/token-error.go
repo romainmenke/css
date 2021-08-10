@@ -1,5 +1,11 @@
 package tokenizer
 
+import (
+	"io"
+
+	"github.com/romainmenke/css/serializer"
+)
+
 type TokenError struct {
 	error error
 }
@@ -18,4 +24,8 @@ func (t TokenError) Err() error {
 
 func (t TokenError) Representation() []rune {
 	return nil
+}
+
+func (t TokenError) Serialize(w io.Writer, options serializer.Options) (int, error) {
+	return 0, nil
 }

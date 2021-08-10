@@ -24,7 +24,7 @@ var NonASCII = &unicode.RangeTable{
 var NameStartCodePoint = []*unicode.RangeTable{
 	unicode.Letter,
 	NonASCII,
-	&unicode.RangeTable{
+	{
 		R16: []unicode.Range16{
 			{Lo: '\u005f', Hi: '\u005f', Stride: 1},
 		},

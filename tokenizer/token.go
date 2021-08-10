@@ -8,4 +8,5 @@ type Token interface {
 type MirroreableToken interface {
 	Token
 	IsMirror(Token) bool
+	Mirror() Token
 }

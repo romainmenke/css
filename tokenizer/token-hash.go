@@ -1,5 +1,11 @@
 package tokenizer
 
+import (
+	"io"
+
+	"github.com/romainmenke/css/serializer"
+)
+
 type TokenHash struct {
 	Type           HashTokenType
 	Value          []rune
@@ -12,6 +18,10 @@ func (t TokenHash) String() string {
 
 func (t TokenHash) Representation() []rune {
 	return t.representation
+}
+
+func (t TokenHash) Serialize(w io.Writer, options serializer.Options) (int, error) {
+	return w.Write([]byte(string(t.Value)))
 }
 
 // Default is "unrestricted"

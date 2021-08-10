@@ -5,7 +5,7 @@ import (
 	"github.com/romainmenke/css/tokenizer"
 )
 
-func consumeSimpleBlock(s tokenStream, associatedToken tokenizer.Token) interface{} {
+func consumeSimpleBlock(s tokenStream, associatedToken tokenizer.Token) stylesheet.Block {
 	simpleBlock := stylesheet.SimpleBlock{
 		AssociatedToken: associatedToken,
 	}

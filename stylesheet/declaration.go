@@ -1,8 +1,10 @@
 package stylesheet
 
 import (
+	"io"
 	"strings"
 
+	"github.com/romainmenke/css/serializer"
 	"github.com/romainmenke/css/tokenizer"
 )
 
@@ -17,6 +19,67 @@ type Declaration struct {
 
 func (d Declaration) String() string {
 	return ""
+}
+
+func (d *Declaration) Serialize(w io.Writer, options serializer.Options) (int, error) {
+	var (
+		n int
+	)
+
+	nn, err := w.Write([]byte(d.Name))
+	n += nn
+	if err != nil {
+		return n, err
+	}
+
+	nn, err = w.Write([]byte(": "))
+	n += nn
+	if err != nil {
+		return n, err
+	}
+
+	if !options.Flag.Has(serializer.Minify) {
+		nn, err = w.Write([]byte(" "))
+		n += nn
+		if err != nil {
+			return n, err
+		}
+	}
+
+	for i, v := range d.Value {
+		switch vv := v.(type) {
+		case serializer.Serializer:
+			nn, err = vv.Serialize(w, options)
+			n += nn
+			if err != nil {
+				return n, err
+			}
+
+			if (i + 1) != len(d.Value) {
+				nn, err = w.Write([]byte(" "))
+				n += nn
+				if err != nil {
+					return n, err
+				}
+			}
+		}
+	}
+
+	if d.Important {
+		nn, err = w.Write([]byte(" !important"))
+		n += nn
+		if err != nil {
+			return n, err
+		}
+	}
+
+	nn, err = w.Write([]byte(";"))
+	n += nn
+	if err != nil {
+		return n, err
+	}
+
+	return n, nil
 }
 
 func (d *Declaration) SetImportant() {

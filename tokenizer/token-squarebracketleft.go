@@ -1,5 +1,11 @@
 package tokenizer
 
+import (
+	"io"
+
+	"github.com/romainmenke/css/serializer"
+)
+
 type TokenSquareBracketLeft struct {
 	representation []rune
 }
@@ -19,4 +25,12 @@ func (t TokenSquareBracketLeft) IsMirror(m Token) bool {
 	default:
 		return false
 	}
+}
+
+func (t TokenSquareBracketLeft) Mirror() TokenSquareBracketRight {
+	return TokenSquareBracketRight{}
+}
+
+func (t TokenSquareBracketLeft) Serialize(w io.Writer, options serializer.Options) (int, error) {
+	return w.Write([]byte("["))
 }
