@@ -21,10 +21,7 @@ func consumeBadURLToken(t *Tokenizer) Token {
 			return TokenBadUrl{}
 
 		case '\\':
-			_, err := Unescape(t, r)
-			if err != nil {
-				// do nothin
-			}
+			Unescape(t, r)
 
 		default:
 			// do nothin

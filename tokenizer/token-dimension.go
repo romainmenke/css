@@ -1,6 +1,11 @@
 package tokenizer
 
-import "fmt"
+import (
+	"fmt"
+	"io"
+
+	"github.com/romainmenke/css/serializer"
+)
 
 type TokenDimension struct {
 	TokenNumber
@@ -12,11 +17,18 @@ func (t TokenDimension) String() string {
 	if t.Type == NumberTypeInteger {
 		return fmt.Sprintf("%d", int64(t.intValue)) + string(t.Unit)
 	}
-	return fmt.Sprintf("%f", t.floatValue) + string(t.Unit)
+
+	// See : https://www.w3.org/TR/cssom-1/#serializing-css-values
+	// rounding the value if necessary to not produce more than 6 decimals
+	return fmt.Sprintf("%.6f", t.floatValue) + string(t.Unit)
 }
 
 func (t TokenDimension) Representation() []rune {
 	return t.representation
+}
+
+func (t TokenDimension) Serialize(w io.Writer, options serializer.Options) (int, error) {
+	return w.Write([]byte(t.String()))
 }
 
 func NewTokenDimensionInt(v int, unit []rune, representation []rune) TokenDimension {
