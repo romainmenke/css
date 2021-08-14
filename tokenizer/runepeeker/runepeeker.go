@@ -22,7 +22,10 @@ type Peeker struct {
 
 func New(r *bufio.Reader) *Peeker {
 	return &Peeker{
-		reader: streampreprocessor.New(r),
+		reader:         streampreprocessor.New(r),
+		representation: make([]rune, 0, 100),
+		peekBuffer:     make([]rune, 0, 100),
+		peekSizes:      make([]int, 0, 100),
 	}
 }
 
@@ -111,10 +114,5 @@ func (p *Peeker) PeekRunes(n int) ([]rune, int, error) {
 		n = len(p.peekBuffer)
 	}
 
-	out := make([]rune, 0, n)
-	for i := 0; i < n; i++ {
-		out = append(out, p.peekBuffer[i])
-	}
-
-	return out, totalSize, nil
+	return p.peekBuffer[0:n], totalSize, nil
 }
